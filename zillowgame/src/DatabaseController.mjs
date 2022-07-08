@@ -12,11 +12,13 @@ import bodyParser from 'body-parser';
 //410 -- INSERT/ PUT -- DUPLICATE ENTRY
 //425 -- PUT ERROR -- NO update has been made
 
+
+//TODO: Remove duplicates
 var connection = mysql.createConnection({
     host: 'classmysql.engr.oregonstate.edu',
-    user: 'cs340_sheajon',
-    password: '4132',
-    database: 'cs340_sheajon'
+    user: 'cs361_featheru',
+    password: '9999',
+    database: 'cs361_featheru'
 });
 
 connection.connect(function(err) {
@@ -33,8 +35,22 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
-//GET/ DISPLAY TABLES & FILTER DB Statements
+app.get('/GET/logins', function(req, res)
+{
+    connection.query("SELECT * FROM `Logins`",  {timeout: 40000} , function(error, results, fields){
+        if(error){
+            res.write(JSON.stringify(error));
+            res.status(404).end();
+        }
+        res.json(results);
+        res.status(201).end();
+    });                                                 
+});
 
+
+/*
+FOR REFERENCE ONLY RIGHT NOW -- DELETE AT PRODUCTION
+//GET/ DISPLAY TABLES & FILTER DB Statements
 app.get('/GET/aptFloors', function(req, res)
 {
     connection.query("SELECT * FROM `AptFloors`",  {timeout: 40000} , function(error, results, fields){
@@ -606,7 +622,7 @@ app.put('/PUT/rodentsToFloors/:rodentID/:floorNum', function(req, res)
         res.end();
     });
 });
-
+*/
 
 
 app.listen(PORT, () => {

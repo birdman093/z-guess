@@ -14,16 +14,17 @@ function AptOwners() {
     }, []);
 
     const [aptOwnerList, setAptOwnersList] = useState([]);
-    const [addField, setAddField] = useState([])
-    const [aptOwnerForUpdate, setAptOwnerForUpdate] = useState([])
-    const [isShowing, setIsShowing] = useState(false);
+    //const [addField, setAddField] = useState([])
+    //const [aptOwnerForUpdate, setAptOwnerForUpdate] = useState([])
+    //const [isShowing, setIsShowing] = useState(false);
 
     const loadAptOwners = async () => {
-        const response = await fetch(`${AddressInUse}/GET/aptOwners`);
+        const response = await fetch(`${AddressInUse}/GET/logins`);
         const aptOwnersList = await response.json();
-        aptOwnersList.forEach((item) => item.ssn = ComposeSSN(item.ssn));
+        //aptOwnersList.forEach((item) => item.ssn = ComposeSSN(item.ssn));
         setAptOwnersList(aptOwnersList);
     }
+    /*
     const toggle = (isShowing) => {
         setIsShowing(!isShowing);
     }
@@ -148,29 +149,9 @@ function AptOwners() {
         const aptOwnerList = await response.json();
         setAptOwnersList(aptOwnerList);
     }
+    */                
 
-    const SSNInputFormat = event => {
-        var tag = document.getElementById("ssnInp");
-        let val = tag.value.replace(/\D/g, '');
-        val = val.replace(/^(\d{3})/, '$1-');
-        val = val.replace(/-(\d{2})/, '-$1-');
-        val = val.replace(/(\d)-(\d{4}).*/, '$1-$2');
-        tag.value = val;
-    };
-
-    const FirstNameFormat = event => {
-        var tag = document.getElementById("firstNameInp");
-        let val = tag.value.replace(/[^a-zA-Z]/g, '');
-        tag.value = val;
-    };
-
-    const LastNameFormat = event => {
-        var tag = document.getElementById("lastNameInp");
-        let val = tag.value.replace(/[^a-zA-Z]/g, '');
-        tag.value = val;
-    };
-                        
-
+    // Input function
     const AptOwnerInput = () => {
         return <tr>
                     <td></td>
@@ -181,6 +162,8 @@ function AptOwners() {
                     <td><MdCancel onClick = {removeAddClick}/></td>
                 </tr>
     };
+
+    /*
     const onAddClick = event => {
         setAddField(<AptOwnerInput/>);
     };
@@ -188,88 +171,48 @@ function AptOwners() {
     const removeAddClick = event => {
         setAddField();
     };
+    */
 
-    // Row of AptFloor data
-    function AptOwnerList({ aptOwners, filterResults}) {
+    // Display Rows of Data
+    function AptOwnerList({aptOwners}) {
         return (
             <table>
                 <thead>
-                <tr>
-                    <th>Owner ID # <FilterColumn fieldToSearch={'ownerId'} filter={filterResults}/></th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Social Security #</th>
-                    <th>Edit</th>
-                    <th>Delete</th>
-                </tr>
+                    <tr>
+                        <th>UserName</th>
+                        <th>Password</th>
+                    </tr>
                 </thead>
                 <tbody>
-                {addField}
-                {aptOwners.map((aptOwner, idx) => <AptOwner aptOwner={aptOwner} key={idx} />)}
+                    {aptOwners.map((aptOwner, idx) => <AptOwner aptOwner={aptOwner} key={idx} />)}
                 </tbody>
             </table>
         );
     }
 
+
+    // Mapping Function
     function AptOwner({ aptOwner}) {
         return (
-            <tr id={aptOwner.ownerID}>
-                <td>{aptOwner.ownerID}</td>
-                <td>{aptOwner.firstName}</td>
-                <td>{aptOwner.lastName}</td>
-                <td>{aptOwner.ssn}</td>
-                <td><MdEdit onClick={() => openUpdateForm (aptOwner)}/></td>
-                <td><MdDelete onClick={() => delAptOwners(aptOwner.ownerID)}/></td>
+            <tr id={aptOwner.username}>
+                <td>{aptOwner.username}</td>
+                <td>{aptOwner.password}</td>
             </tr>
         );
     }
 
 
+    // Base Page Template
     return(
         <>
         <Header/>
         <SideBar />
-        <h1>Apartment Owners Table</h1>
-        <p>Tracks current and past apartment owners at Beaver Development by first name, last name, and SSN</p>
-        <button onClick={onAddClick}>+ Add New Item</button>
-        <AptOwnerList aptOwners={aptOwnerList} filterResults={filterResults}/>
-        <Modal isShowing={isShowing} hide={toggle} aptOwnerForUpdate={aptOwnerForUpdate} updateAptOwners={updateAptOwners} SSNInputFormat={SSNInputFormat} FirstNameFormat={FirstNameFormat} LastNameFormat={LastNameFormat}/>
+        <h1>Header 1</h1>
+        <p>Some Info Here</p>
+        <button>+ Add New Item</button>
+        <AptOwnerList aptOwners={aptOwnerList}/>
         </>
     )
 }
-
-const Modal = ({ isShowing, hide ,aptOwnerForUpdate, updateAptOwners, SSNInputFormat, FirstNameFormat, LastNameFormat}) => isShowing ? ReactDOM.createPortal(
-    <React.Fragment>
-        <div className="modal-overlay"/>
-        <div className="modal-wrapper" aria-modal aria-hidden tabIndex={-1} role="dialog">
-            <div className="modal">
-                <div className="modal-header">
-                    <button type="button" className="modal-close-button" data-dismiss="modal" aria-label="Close" onClick={hide}>
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <form>
-                    <p>Owner ID</p>
-                    <text>{aptOwnerForUpdate.ownerID}</text>
-                    <p>First Name</p>
-                    <input id="firstNameInp" placeholder={aptOwnerForUpdate.firstName} type={"text"} onKeyUp={FirstNameFormat}/>
-                    <p>Last Name</p>
-                    <input id="lastNameInp" placeholder={aptOwnerForUpdate.lastName} type={"text"} onKeyUp={LastNameFormat}/>
-                    <p>SSN [Optional]</p>
-                    <input id="ssnInp" placeholder={aptOwnerForUpdate.ssn}  type={"text"} onKeyUp={SSNInputFormat}/>
-                    <MdUpdate onClick={e => {
-                        if(document.getElementById("ssnInp").value.length !== 11){
-                            alert('SSN must be 9 digits long (excluding dashes).')
-                        } else{
-                            updateAptOwners(aptOwnerForUpdate, document.getElementById("firstNameInp").value, document.getElementById("lastNameInp").value, document.getElementById("ssnInp").value)
-
-                        }
-                    }}/>
-                </form>
-            </div>
-        </div>
-    </React.Fragment> , document.body
-) : null;
-
 
 export default AptOwners;
