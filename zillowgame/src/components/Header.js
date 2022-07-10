@@ -13,7 +13,8 @@ const Header = () => {
     return (
       <div className='header'>
           <HeaderLink page='' />
-          <HeaderLink page='AptOwners' />
+          <HeaderLink page='AccountPage' />
+          <HeaderLink page='DisplayProperties' />
       </div>
     );
   };

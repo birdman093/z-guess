@@ -3,6 +3,7 @@ const PORT = 6363;
 import mysql from 'mysql';
 import cors from 'cors';
 import bodyParser from 'body-parser';
+import connection from './DatabaseConnection.js'
 
 //ERROR CODES
 //404 -- PAGE NOT FOUND -- DB NOT WORKING DURING SELECTION
@@ -12,8 +13,7 @@ import bodyParser from 'body-parser';
 //410 -- INSERT/ PUT -- DUPLICATE ENTRY
 //425 -- PUT ERROR -- NO update has been made
 
-
-//TODO: Remove duplicates
+/*  REMOVE FROM PRODUCTION
 var connection = mysql.createConnection({
     host: 'classmysql.engr.oregonstate.edu',
     user: 'cs361_featheru',
@@ -28,6 +28,7 @@ connection.connect(function(err) {
     }
     console.log('connected as id ' + connection.threadId);
 });
+*/
 
 
 const app = express();
@@ -35,9 +36,31 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
-app.get('/GET/logins', function(req, res)
+//  LazyMan's Password Validation  --> need to figure out hashing approach
+app.post('/GET/user', function(req, res)
 {
-    connection.query("SELECT * FROM `Logins`",  {timeout: 40000} , function(error, results, fields){
+    var sql = "SELECT `FirstName`, `LastName`, `Score` FROM `Logins` WHERE `UserName` = ? AND `Password` = ?";
+    var inserts = [req.body.userName, req.body.password];
+    connection.query(sql, inserts, function(error, results, fields){
+        if(error){
+            res.write(JSON.stringify(error));
+            res.status(404).end();
+        }
+        res.json(results);
+        res.status(201).end();
+    });                                              
+});
+
+app.get('/GET/properties/:userName', function(req, res)
+{
+    //TODO: Change from * to be more nuanced to avoid password!
+    var sql = "SELECT * FROM `Logins` LEFT JOIN `LoginsToProperties` ON Logins.UserName = " +
+    "LoginsToProperties.UserName LEFT JOIN `Properties` ON LoginsToProperties.PropertyID = " +
+    "Properties.PropertyID WHERE Logins.UserName = ?"
+
+    var inserts = [req.params.userName]
+
+    connection.query(sql, inserts, {timeout: 40000} , function(error, results, fields){
         if(error){
             res.write(JSON.stringify(error));
             res.status(404).end();
@@ -45,6 +68,50 @@ app.get('/GET/logins', function(req, res)
         res.json(results);
         res.status(201).end();
     });                                                 
+});
+
+app.post('/POST/properties', function(req, res)
+{
+    var sql = "INSERT INTO `Properties`(`PropertyID`, `Name`, `Number`, `Street`," +
+     "`AptNum`, `Town`, `City`, `ZipCode`, `ListPrice`, `Zestimate`, `SellPrice`, `Url`)" +
+     " VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+    //{propertyID, name, number, street, aptNum, town, city, zipCode, listPrice, zestimate, url}
+    var inserts = [req.body.propertyID, req.body.name, req.body.number, req.body.street, req.body.aptNum, 
+    req.body.town, req.body.city, req.body.zipCode, req.body.listPrice, req.body.zestimate, req.body.url];
+    connection.query(sql,inserts,function(error, results, fields){
+        if(error){
+            if (error.code === "ER_DUP_ENTRY") {
+                res.status(410);
+            } else {
+                res.status(407);
+            }
+            res.write(JSON.stringify(error));
+            res.end();
+        }else{
+            res.status(201);
+            res.end();
+        }
+    });
+});
+
+app.post('/POST/guess', function(req, res)
+{
+    var sql = "INSERT INTO `LoginsToProperties`(`UserName`, `PropertyID`, `Guess`) VALUES (?, ?, ?)";
+    var inserts = [req.body.userName, req.body.propertyID, req.body.guess];
+    connection.query(sql,inserts,function(error, results, fields){
+        if(error){
+            if (error.code === "ER_DUP_ENTRY") {
+                res.status(410);
+            } else {
+                res.status(407);
+            }
+            res.write(JSON.stringify(error));
+            res.end();
+        }else{
+            res.status(201);
+            res.end();
+        }
+    });
 });
 
 
