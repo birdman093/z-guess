@@ -7,6 +7,7 @@ import {MdAdd, MdAirlineSeatLegroomExtra, MdCancel, MdDelete, MdEdit, MdUpdate} 
 import FilterColumn from "../components/FilterColumn";
 import {AddressInUse} from "../ServerConstant.js";
 import ReactDOM from "react-dom";
+import userObj from "./user.js";
 
 function DisplayProperties() {
     useEffect(() => {
@@ -17,9 +18,10 @@ function DisplayProperties() {
     const [addField, setAddField] = useState([])
 
     const loadAptOwners = async () => {
-        //TODO: USERNAME ENTRY HERE
-        let CURRENT_username = 0;
-        const response = await fetch(`${AddressInUse}/GET/properties/${CURRENT_username}`);
+        if (userObj.firstName.length === 0){
+            alert("Please Login to view Properties at the Account Page")
+        }
+        const response = await fetch(`${AddressInUse}/GET/properties/${userObj.userName}`);
         const aptOwnersList = await response.json();
         setAptOwnersList(aptOwnersList);
     }
@@ -32,9 +34,10 @@ function DisplayProperties() {
 
     // add new property to be displayed
     const addAptOwners = async() => {
-        //TODO: USERNAME ENTRY HERE
-        let CURRENT_username = 0;
-        let userName = CURRENT_username;
+        if (userObj.userName.length === 0){
+            alert("Please Login to view Properties at the Account Page")
+        }
+        let userName = userObj.userName;
         let propertyID = document.getElementById("propertyIDInp").value;
         let name = document.getElementById("nameInp").value;
         let number = document.getElementById("numberInp").value;
@@ -56,7 +59,6 @@ function DisplayProperties() {
                 alert("missing field!")
                 return
         }
-
         const newAptOwner = {userName, propertyID, name, number, street, aptNum, town, city, zipCode, listPrice, zestimate, url}
      
         const response = await fetch(`${AddressInUse}/POST/properties`, {
@@ -74,18 +76,22 @@ function DisplayProperties() {
             if (response.status === 410) {
                 alert(`Failed to add ${propertyID} due to Duplicate Entry in DB, Server code = ${response.status}`)
             } else {
+                console.log(response)
                 alert(`Failed to add ${propertyID} due to DB Error Code: ${response.status}, Server code = ${response.status}`);
             }
         }
     }
 
-        // add new property to be displayed
+    // add new property to be displayed
     const addGuess = async(aptOwner) => {
-        let propertyID = aptOwner.propertyID;
-        let guess = document.getElementById("guessInp"+aptOwner.propertyID).value;
-        let userName = 0;
-
-        //TODO: Add UserName in
+        console.log("here");
+        if (userObj.userName.length === 0){
+            alert("Please Login to view Properties at the Account Page")
+        }
+        console.log(aptOwner)
+        let propertyID = aptOwner.PropertyID;
+        let guess = document.getElementById("guessInp"+propertyID).value;
+        let userName = userObj.userName;
         const newGuess = {propertyID, userName, guess}
      
         const response = await fetch(`${AddressInUse}/POST/guess`, {
@@ -110,20 +116,21 @@ function DisplayProperties() {
     // UI Input for Properties
     const AptOwnerInput = () => {
         return <tr>
+                    <td><input id="propertyIDInp" placeholder="distinct Zillow id" onKeyUp={(id) => numFormat(id)}/></td>
+                    <td><input id="nameInp" placeholder="nickname"/></td>
+                    <td><input id="numberInp" placeholder="house #"/></td>
+                    <td><input id="streetInp" placeholder="street name"/></td>
+                    <td><input id="aptNumInp" placeholder="apt #"/></td>
+                    <td><input id="townInp" placeholder="town"/></td>
+                    <td><input id="cityInp" placeholder="city"/></td>
+                    <td><input id="zipCodeInp" placeholder="zipCode"/></td>
+                    <td><input id="listPriceInp" placeholder="list price" onKeyUp={(id) => numFormat(id)}/></td>
+                    <td><input id="zestimateInp" placeholder="zestimate" onKeyUp={(id) => numFormat(id)}/></td>
                     <td></td>
-                    <td><input id="propertyIDInp" placeholder="distinct Zillow id e.g. xxxxx" onKeyUp={(id) => numFormat(id)}/></td>
-                    <td><input id="nameInp" placeholder="nickname e.g. weird shaped house"/></td>
-                    <td><input id="numberInp" placeholder="number to house e.g. 111 in 111 E. Seneca St."/></td>
-                    <td><input id="streetInp" placeholder="number to house e.g. 111 in 111 E. Seneca St."/></td>
-                    <td><input id="aptNumInp" placeholder="number to house e.g. 111 in 111 E. Seneca St."/></td>
-                    <td><input id="townInp" placeholder="number to house e.g. 111 in 111 E. Seneca St."/></td>
-                    <td><input id="cityInp" placeholder="number to house e.g. 111 in 111 E. Seneca St."/></td>
-                    <td><input id="zipCodeInp" placeholder="number to house e.g. 111 in 111 E. Seneca St."/></td>
-                    <td><input id="listPriceInp" placeholder="number to house e.g. 111 in 111 E. Seneca St." onKeyUp={(id) => numFormat(id)}/></td>
-                    <td><input id="zestimateInp" placeholder="number to house e.g. 111 in 111 E. Seneca St." onKeyUp={(id) => numFormat(id)}/></td>
                     <td><input id="urlInp" placeholder="zillow url"/></td>
                     <td><MdAdd onClick = {addAptOwners}/></td>
                     <td><MdCancel onClick = {removeAddClick}/></td>
+                    <td></td>
                 </tr>
     };
 
@@ -137,14 +144,15 @@ function DisplayProperties() {
     };
 
     const AddGuessInput = async(aptOwner) => {
-        //Check there is no guess already --> send alert if guess already
-        if (document.getElementById("guessInp").length > 3 && aptOwner.Guess === "0" && document.getElementById("guessInp").length < 10){
+        let guess = document.getElementById("guessInp"+aptOwner.PropertyID).value
+        console.log(guess.length)
+        //TODO: Validate no guess has been made
+        if (guess.length > 3 && guess.length < 10){
+            console.log("validGuess")
             addGuess(aptOwner);
-        } else if (aptOwner.Guess.Length > 3){
-            alert("Guess has already been Entered");
-        } else if (document.getElementById("guessInp").length < 4) {
+        } else if (guess.length < 4) {
             alert("Invalid Guess Input: Input must be greater than $999");
-        } else if (document.getElementById("guessInp").length > 10) {
+        } else if (guess.length > 10) {
             alert("Invalid Guess Input: Input must be smaller than $1,000,000,000");
         } else {
             alert("Invalid Guess Input")
@@ -170,8 +178,8 @@ function DisplayProperties() {
                         <td>Sell Price</td>
                         <td>URL</td>
                         <td>Guess</td>
-                        <td></td>
-                        <td></td>
+                        <td>     </td>
+                        <td>     </td>
                     </tr>
                 </thead>
                 <tbody>
@@ -187,6 +195,7 @@ function DisplayProperties() {
     function AptOwner({ aptOwner}) {
         return (
             <tr id={aptOwner.PropertyID}>
+                <td>{aptOwner.PropertyID}</td>
                 <td>{aptOwner.Name}</td>
                 <td>{aptOwner.Number}</td>
                 <td>{aptOwner.Street}</td>
@@ -199,8 +208,8 @@ function DisplayProperties() {
                 <td>{aptOwner.SellPrice}</td>
                 <td>{aptOwner.Url}</td>
                 <td>{aptOwner.Guess}</td>
-                <td><MdEdit onClick={() => AddGuessInput(aptOwner)}/></td>
-                <td><input id = {"guessInp"+aptOwner.PropertyID} onKeyUp={(id) => numFormat(id)}/></td>
+                <td><MdAdd onClick={() => AddGuessInput(aptOwner)}/></td>
+                <td><input id = {"guessInp"+aptOwner.PropertyID} onKeyUp={(id) => numFormat(id)} placeholder="enter guess!"/></td>
             </tr>
         );
     }

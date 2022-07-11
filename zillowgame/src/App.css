@@ -177,3 +177,7 @@ body {
   cursor: pointer;
   border: none;
 }
+
+input{
+  width: 75px;
+}

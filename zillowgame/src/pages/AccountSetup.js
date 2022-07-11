@@ -14,9 +14,17 @@ function AccountSetup() {
     const VerifyPassword = async () => {
         let userName = document.getElementById("userNameInp").value;
         let password = document.getElementById("passwordInp").value;
-        const userLogin = {userName, password}
+        const userLogin = {userName, password};
+
+        if (userName.length == 0) {
+            alert("Invalid UserName Entry")
+            return
+        } else if (password.length == 0) {
+            alert("Invalid password Entry")
+            return
+        }
      
-        const response = await fetch(`${AddressInUse}/POST/user`, {
+        const response = await fetch(`${AddressInUse}/GET/user`, {
             method: 'POST',
             body: JSON.stringify(userLogin),
             headers: {
@@ -25,12 +33,20 @@ function AccountSetup() {
         });
 
         const resValue = await response.json();
-        userObj.firstName = resValue.FirstName;
-        userObj.lastName = resValue.LastName;
-        userObj.score = resValue.Score;
-        document.getElementById("firstNameInp").value = userObj.firstName;
-        document.getElementById("lastNameInp").value = userObj.LastName;
-        document.getElementById("scoreInp").value = userObj.Score;
+        if (resValue.length > 0){
+            userObj.userName = userName;
+            userObj.firstName = resValue[0].FirstName;
+            userObj.lastName = resValue[0].LastName;
+            userObj.score = resValue[0].Score;
+            console.log(userObj);
+            document.getElementById("Greeting").textContent = "Hello " + userObj.firstName + " " + userObj.lastName + " with a score of " + userObj.score;
+        } else {
+            userObj.userName = "";
+            userObj.firstName = "";
+            userObj.lastName = "";
+            userObj.score = "";
+            document.getElementById("Greeting").value = "No User Logged In";
+        }
     }
 
     // Base Page Template
@@ -44,10 +60,8 @@ function AccountSetup() {
         <input id ="userNameInp"></input>
         <label>Password: </label>
         <input id = "passwordInp"></input>
-        <button onClick = {VerifyPassword}></button>
-        <p id = "firstNameOut"></p>
-        <p id = "lastNameOut"></p>
-        <p id = "scoreOut"></p>
+        <button onClick = {VerifyPassword}>Verify</button>
+        <p id = "Greeting">No User Logged In</p>
         </>
     )
 }

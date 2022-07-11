@@ -1,4 +1,4 @@
-const userObj = {firstName:"", lastName:"", score:""}
+const userObj = {userName: "", firstName:"", lastName:"", score:""}
 export default userObj
 
 
