@@ -41,12 +41,19 @@ table {
 
 td, th {
   border: 1px solid #ddd;
-  padding: 8px;
+  padding: 4px;
+  font-size: 14px;
+  width: 65px;
+}
+
+td.propHeader{
+  font-size: 16px;
+  background-color: lightgray;
 }
 
 tr:nth-child(even){background-color: #f2f2f2;}
 
-tr:hover {background-color: #ddd;}
+tr:hover {background-color: lightsalmon};
 
 th {
   padding-top: 12px;
@@ -69,10 +76,15 @@ body {
 
 #page-wrap {
   text-align: center;
+  overflow: auto;
 }
 
-#Menu {
+/*#Menu {
   overflow: hidden;
+}*/
+
+menu-item{
+  font-size: 12px;
 }
 
 .bm-item {
@@ -102,7 +114,6 @@ body {
 
 .bm-burger-bars {
   background: #373a47;
-  overflow: hidden;
 }
 
 .bm-menu {
@@ -110,9 +121,24 @@ body {
   padding: 2.5em 1.5em 0;
   font-size: 1.15em;
   text-align: left;
-  overflow: hidden;
 }
 
+.bm-item-list {
+  color: #b8b7ad;
+}
+
+/*
+.bm-menu-wrap {
+  position: fixed;
+  height: 100%;
+}
+
+
+#page-wrap {
+  padding-bottom: 10px;
+  padding-top: 10px;
+}
+*/
 
 .bm-item-list {
   color: #b8b7ad;
@@ -125,6 +151,7 @@ body {
  .filter-column{
    white-space: nowrap;
  }
+
 
 
 .modal-overlay {
@@ -179,5 +206,5 @@ body {
 }
 
 input{
-  width: 75px;
+  width: 57px;
 }

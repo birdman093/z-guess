@@ -165,21 +165,21 @@ function DisplayProperties() {
             <table>
                 <thead>
                     <tr>
-                        <td>PropertyID</td>
-                        <td>Name</td>
-                        <td>Number</td>
-                        <td>Street</td>
-                        <td>AptNum</td>
-                        <td>Town</td>
-                        <td>City</td>
-                        <td>ZipCode</td>
-                        <td>ListPrice</td>
-                        <td>Zestimate</td>
-                        <td>Sell Price</td>
-                        <td>URL</td>
-                        <td>Guess</td>
-                        <td>     </td>
-                        <td>     </td>
+                        <td class = "propHeader">PropertyID</td>
+                        <td class = "propHeader">Name</td>
+                        <td class = "propHeader">Number</td>
+                        <td class = "propHeader">Street</td>
+                        <td class = "propHeader">AptNum</td>
+                        <td class = "propHeader">Town</td>
+                        <td class = "propHeader">City</td>
+                        <td class = "propHeader">ZipCode</td>
+                        <td class = "propHeader">ListPrice</td>
+                        <td class = "propHeader">Zestimate</td>
+                        <td class = "propHeader">Sell Price</td>
+                        <td class = "propHeader">URL</td>
+                        <td class = "propHeader">Guess</td>
+                        <td class = "propHeader">     </td>
+                        <td class = "propHeader">     </td>
                     </tr>
                 </thead>
                 <tbody>
