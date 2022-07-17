@@ -1,5 +1,6 @@
 const userObj = {userName: "", firstName:"", lastName:"", score:""}
-export default userObj
+const spotifyObj = {url: "No Playlist Generated"}
+export default userObj, playList
 
 
 

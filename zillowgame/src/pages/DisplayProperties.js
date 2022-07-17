@@ -19,7 +19,7 @@ function DisplayProperties() {
 
     const loadAptOwners = async () => {
         if (userObj.firstName.length === 0){
-            alert("Please Login to view Properties at the Account Page")
+            alert("Please Login at Account Page to View Properties")
         }
         const response = await fetch(`${AddressInUse}/GET/properties/${userObj.userName}`);
         const aptOwnersList = await response.json();
@@ -35,7 +35,7 @@ function DisplayProperties() {
     // add new property to be displayed
     const addAptOwners = async() => {
         if (userObj.userName.length === 0){
-            alert("Please Login to view Properties at the Account Page")
+            alert("Please Login at Account Page to View Properties")
         }
         let userName = userObj.userName;
         let propertyID = document.getElementById("propertyIDInp").value;
@@ -74,10 +74,10 @@ function DisplayProperties() {
             removeAddClick();
         } else {
             if (response.status === 410) {
-                alert(`Failed to add ${propertyID} due to Duplicate Entry in DB, Server code = ${response.status}`)
+                alert(`Failed to add PropertyID: ${propertyID} due to Duplicate Entry in DB, Server code = ${response.status}`)
             } else {
                 console.log(response)
-                alert(`Failed to add ${propertyID} due to DB Error Code: ${response.status}, Server code = ${response.status}`);
+                alert(`Failed to add PropertyID: ${propertyID} due to DB Error Code: ${response.status}, Server code = ${response.status}`);
             }
         }
     }
@@ -116,14 +116,14 @@ function DisplayProperties() {
     // UI Input for Properties
     const AptOwnerInput = () => {
         return <tr>
-                    <td><input id="propertyIDInp" placeholder="distinct Zillow id" onKeyUp={(id) => numFormat(id)}/></td>
-                    <td><input id="nameInp" placeholder="nickname"/></td>
-                    <td><input id="numberInp" placeholder="house #"/></td>
-                    <td><input id="streetInp" placeholder="street name"/></td>
-                    <td><input id="aptNumInp" placeholder="apt #"/></td>
-                    <td><input id="townInp" placeholder="town"/></td>
-                    <td><input id="cityInp" placeholder="city"/></td>
-                    <td><input id="zipCodeInp" placeholder="zipCode"/></td>
+                    <td><input id="propertyIDInp" placeholder="Distinct ID" onKeyUp={(id) => numFormat(id)}/></td>
+                    <td><input id="nameInp" placeholder="Nickname"/></td>
+                    <td><input id="numberInp" placeholder="House #"/></td>
+                    <td><input id="streetInp" placeholder="Street name"/></td>
+                    <td><input id="aptNumInp" placeholder="[Optional] apt #"/></td>
+                    <td><input id="townInp" placeholder="Town"/></td>
+                    <td><input id="cityInp" placeholder="City"/></td>
+                    <td><input id="zipCodeInp" placeholder="ZipCode" onKeyUp={(id) => numFormat(id)}/></td>
                     <td><input id="listPriceInp" placeholder="list price" onKeyUp={(id) => numFormat(id)}/></td>
                     <td><input id="zestimateInp" placeholder="zestimate" onKeyUp={(id) => numFormat(id)}/></td>
                     <td></td>
@@ -145,15 +145,13 @@ function DisplayProperties() {
 
     const AddGuessInput = async(aptOwner) => {
         let guess = document.getElementById("guessInp"+aptOwner.PropertyID).value
-        console.log(guess.length)
-        //TODO: Validate no guess has been made
         if (guess.length > 3 && guess.length < 10){
             console.log("validGuess")
             addGuess(aptOwner);
         } else if (guess.length < 4) {
-            alert("Invalid Guess Input: Input must be greater than $999");
+            alert("Invalid Guess: Guess must be greater than $999");
         } else if (guess.length > 10) {
-            alert("Invalid Guess Input: Input must be smaller than $1,000,000,000");
+            alert("Invalid Guess: Guess must be smaller than $1,000,000,000");
         } else {
             alert("Invalid Guess Input")
         }
@@ -221,7 +219,7 @@ function DisplayProperties() {
         <Header/>
         <SideBar />
         <h1>Display Past, Present, and Future Guess Properties</h1>
-        <p>Add new properties by clicking the Add button, guess on existing properties, or wait for results to come in on sold properties!</p>
+        <p>Add new properties, Guess on existing properties, or Wait for results to come in on sold properties!</p>
         <button onClick={onAddClick}>+ Add New Item</button>
         <AptOwnerList aptOwners={aptOwnerList}/>
         </>

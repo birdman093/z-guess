@@ -50,6 +50,23 @@ app.post('/GET/user', function(req, res)
     });                                              
 });
 
+app.get('/GET/spotifyproperties/:userName', function(req, res)
+{
+    //Send link to spotify playlist microservice
+    var qString = `SELECT Properties.Url FROM Logins LEFT JOIN LoginsToProperties ON Logins.UserName = ` +
+    `LoginsToProperties.UserName LEFT JOIN Properties ON LoginsToProperties.PropertyID = ` +
+    `Properties.PropertyID WHERE Logins.UserName = ?`;
+
+    connection.query(qString, [req.params.userName],function(error, results, fields){
+        if(error){
+            res.write(JSON.stringify(error));
+            res.status(404).end();
+        }
+        res.json(results);
+        res.status(201).end();
+    });                                                 
+});
+
 app.get('/GET/properties/:userName', function(req, res)
 {
     //TODO: Change from * to be more nuanced to avoid password!
