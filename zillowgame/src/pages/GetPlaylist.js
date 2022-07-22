@@ -7,7 +7,7 @@ import {MdAdd, MdCancel, MdDelete, MdEdit, MdUpdate} from "react-icons/md";
 import FilterColumn from "../components/FilterColumn";
 import {AddressInUse,SpotifyAddress} from "../ServerConstant.js";
 import ReactDOM from "react-dom";
-import userObj, spotifyObj from "./user.js";
+import userObj from "./user.js";
 
 function GetPlaylist() {
     // Label that says to add up to 5 songs
@@ -21,7 +21,7 @@ function GetPlaylist() {
         let song3 = document.getElementById("song3Inp").value;
         let song4 = document.getElementById("song4Inp").value;
         let song5 = document.getElementById("song5Inp").value;
-        const songs = {};
+        const songs = [];
 
 
         if (song1.length == 0) {
@@ -29,29 +29,42 @@ function GetPlaylist() {
             return
         }
         
-        if (song1.length > 0 ){ songs.add(song1);}
-        if (song2.length > 0 ){ songs.add(song2);}
-        if (song3.length > 0 ){ songs.add(song3);}
-        if (song4.length > 0 ){ songs.add(song4);}
-        if (song5.length > 0 ){ songs.add(song5);}
+        if (song1.length > 0 ){ songs.push(song1);}
+        if (song2.length > 0 ){ songs.push(song2);}
+        if (song3.length > 0 ){ songs.push(song3);}
+        if (song4.length > 0 ){ songs.push(song4);}
+        if (song5.length > 0 ){ songs.push(song5);}
      
+        const songPass ={songs}
         const response = await fetch(`${SpotifyAddress}/GET/playlistgenerator`, {
             method: 'POST',
-            body: JSON.stringify(songs),
+            body: JSON.stringify(songPass),
             headers: {
                 'Content-Type': 'application/json'
             }
         });
 
         const resValue = await response.json();
+        console.log(resValue);
 
-        if (resValue.playlist.length > 0) {
-            spotifyObj.url = resValue.playlist
-        } else {
-            spotifyObj.url = resValue.playlist
+        userObj.url = resValue.url;
+
+        document.getElementById("playList").innerHTML = userObj.url;
+    }
+
+    const GetLink = async () => {
+        let UserName = userObj.userName
+
+        if (UserName.length == 0) {
+            alert("Must Log-In to get url link")
+            return
         }
+     
+        const response = await fetch(`${SpotifyAddress}/GET/spotifyproperties/${UserName}`);
+        const resValue = await response.json();
+        console.log(resValue);
 
-        document.getElementById("playList").value = spotifyObj.url;
+        document.getElementById("test_GetLink").innerHTML = resValue[0].Url;
     }
 
     // Base Page Template
@@ -63,18 +76,20 @@ function GetPlaylist() {
         <p>Get a Playlist to Listen to as you Look at Zillow Properties!</p>
         <label>Song1: </label>
         <input id ="song1Inp"></input>
-        <label>Song1: </label>
+        <label>Song2: </label>
         <input id ="song2Inp"></input>
-        <label>Song1: </label>
+        <label>Song3: </label>
         <input id ="song3Inp"></input>
-        <label>Song1: </label>
+        <label>Song4: </label>
         <input id ="song4Inp"></input>
-        <label>Song1: </label>
+        <label>Song5: </label>
         <input id ="song5Inp"></input>
         <button onClick = {GetSpotifyPlaylist}>GetSpotifyPlaylist</button>
-        <p id = "playList" value = {spotifyObj.url}></p>
+        <p id = "playList">{userObj.url}</p>
+        <button onClick = {GetLink}>TESTING -- GET Link from CurrentUser</button>
+        <p id = "test_GetLink">No Links Generated Yet</p>
         </>
     )
 }
 
-export default AccountSetup;
+export default GetPlaylist;

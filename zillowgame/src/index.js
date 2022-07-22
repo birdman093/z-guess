@@ -7,6 +7,7 @@ import {
 import App from "./App";
 import AccountSetup from "./pages/AccountSetup";
 import DisplayProperties from "./pages/DisplayProperties";
+import GetPlaylist from "./pages/GetPlaylist";
 const rootElement = document.getElementById("root");
 
 // Routing for all pages.
@@ -15,6 +16,7 @@ render(
     <Routes>
       <Route path="/" element={<App />} />
       <Route path="AccountPage" element={<AccountSetup/>} />
+      <Route path="GetPlaylist" element={<GetPlaylist/>} />
       <Route path="DisplayProperties" element={<DisplayProperties/>} />
     </Routes>
   </BrowserRouter>,

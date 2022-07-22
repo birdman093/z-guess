@@ -14,6 +14,7 @@ const Header = () => {
       <div className='header'>
           <HeaderLink page='' />
           <HeaderLink page='AccountPage' />
+          <HeaderLink page='GetPlaylist' />
           <HeaderLink page='DisplayProperties' />
       </div>
     );

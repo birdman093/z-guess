@@ -55,7 +55,7 @@ app.get('/GET/spotifyproperties/:userName', function(req, res)
     //Send link to spotify playlist microservice
     var qString = `SELECT Properties.Url FROM Logins LEFT JOIN LoginsToProperties ON Logins.UserName = ` +
     `LoginsToProperties.UserName LEFT JOIN Properties ON LoginsToProperties.PropertyID = ` +
-    `Properties.PropertyID WHERE Logins.UserName = ?`;
+    `Properties.PropertyID WHERE Logins.UserName = ? ORDER BY RAND () LIMIT 1`;
 
     connection.query(qString, [req.params.userName],function(error, results, fields){
         if(error){
@@ -64,6 +64,7 @@ app.get('/GET/spotifyproperties/:userName', function(req, res)
         }
         res.json(results);
         res.status(201).end();
+        //Url to access
     });                                                 
 });
 
@@ -148,6 +149,14 @@ app.post('/POST/guess', function(req, res)
             res.end();
         }
     });
+});
+
+// Testing out Beat the Zestimate End of Microservice
+app.post('/GET/playlistgenerator', function(req, res)
+{
+    var NumSongsSent = req.body.songs.length;
+    res.json({url:NumSongsSent});
+    res.end()   
 });
 
 app.listen(PORT, () => {
