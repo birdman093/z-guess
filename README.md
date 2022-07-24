@@ -4,16 +4,14 @@ How to Request Data?
 
 GET API Request:  
 
-1.) Make a GET request with the userName in the url link
-2.) userName must be in the DB system, use featheru for testing purposes
+Make a GET request with the userName in the url link. UserName must be in the DB system, use featheru for testing purposes
 
 btzAddress = http://flip2.engr.oregonstate.edu:6363
-${btzAddress}/GET/spotifyproperties/{userName}
+${btzAddress}/GET/spotifyproperties/{UserName}
 
 How to Receive Data?
 
-1.) Data returns as a json
-2.) If no properties are found the following entry will be returned Url: "No Properties Found"
+Data returned as JSON from API. If no properties are found the following entry will be returned {Url: "No Properties Found"}
 
 json({Url: ?})
 
