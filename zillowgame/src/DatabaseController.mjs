@@ -62,10 +62,11 @@ app.get('/GET/spotifyproperties/:userName', function(req, res)
             res.write(JSON.stringify(error));
             res.status(404).end();
         }
-        if (results.length > 0) {
-            res.json(results[0].Url)
+        console.log(results[0].Url)
+        if (results[0].Url !== null) {
+            res.json(results[0])
         } else {
-            res.json("No Properties Found");
+            res.json({Url: "No Properties Found"});
         }
         res.status(201).end();
         //Url to access

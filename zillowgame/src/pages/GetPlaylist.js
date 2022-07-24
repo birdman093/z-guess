@@ -70,7 +70,7 @@ function GetPlaylist() {
         const resValue = await response.json();
         console.log(resValue);
 
-        document.getElementById("test_GetLink").innerHTML = resValue[0].Url;
+        document.getElementById("test_GetLink").innerHTML = resValue.Url;
     }
 
     // Base Page Template
