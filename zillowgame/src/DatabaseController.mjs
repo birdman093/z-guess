@@ -62,7 +62,11 @@ app.get('/GET/spotifyproperties/:userName', function(req, res)
             res.write(JSON.stringify(error));
             res.status(404).end();
         }
-        res.json(results);
+        if (results.length > 0) {
+            res.json(results[0].Url)
+        } else {
+            res.json("No Properties Found");
+        }
         res.status(201).end();
         //Url to access
     });                                                 
@@ -70,7 +74,6 @@ app.get('/GET/spotifyproperties/:userName', function(req, res)
 
 app.get('/GET/properties/:userName', function(req, res)
 {
-    //TODO: Change from * to be more nuanced to avoid password!
     var qString = `SELECT * FROM Logins LEFT JOIN LoginsToProperties ON Logins.UserName = ` +
     `LoginsToProperties.UserName LEFT JOIN Properties ON LoginsToProperties.PropertyID = ` +
     `Properties.PropertyID WHERE Logins.UserName = ?`;
@@ -152,10 +155,10 @@ app.post('/POST/guess', function(req, res)
 });
 
 // Testing out Beat the Zestimate End of Microservice
-app.post('/GET/playlistgenerator', function(req, res)
+app.post('/playlistgenerator', function(req, res)
 {
-    var NumSongsSent = req.body.songs.length;
-    res.json({url:NumSongsSent});
+    var NumSongsSent = req.body.tracks.length;
+    res.json({link:NumSongsSent});
     res.end()   
 });
 

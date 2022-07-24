@@ -16,27 +16,33 @@ function GetPlaylist() {
     // Playlist Link: 
 
     const GetSpotifyPlaylist = async () => {
+        let title = document.getElementById("playListNameInp").value;
         let song1 = document.getElementById("song1Inp").value;
         let song2 = document.getElementById("song2Inp").value;
         let song3 = document.getElementById("song3Inp").value;
         let song4 = document.getElementById("song4Inp").value;
         let song5 = document.getElementById("song5Inp").value;
-        const songs = [];
+        const tracks = [];
 
 
         if (song1.length == 0) {
             alert("Must Have at least one song in first slot")
-            return
+            return;
+        }
+
+        if (title.length == 0) {
+            alert("Must enter a playlist Name!")
+            return;
         }
         
-        if (song1.length > 0 ){ songs.push(song1);}
-        if (song2.length > 0 ){ songs.push(song2);}
-        if (song3.length > 0 ){ songs.push(song3);}
-        if (song4.length > 0 ){ songs.push(song4);}
-        if (song5.length > 0 ){ songs.push(song5);}
+        if (song1.length > 0 ){ tracks.push(song1);}
+        if (song2.length > 0 ){ tracks.push(song2);}
+        if (song3.length > 0 ){ tracks.push(song3);}
+        if (song4.length > 0 ){ tracks.push(song4);}
+        if (song5.length > 0 ){ tracks.push(song5);}
      
-        const songPass ={songs}
-        const response = await fetch(`${SpotifyAddress}/GET/playlistgenerator`, {
+        const songPass ={title, tracks}
+        const response = await fetch(`${SpotifyAddress}/playlistgenerator`, {
             method: 'POST',
             body: JSON.stringify(songPass),
             headers: {
@@ -47,7 +53,7 @@ function GetPlaylist() {
         const resValue = await response.json();
         console.log(resValue);
 
-        userObj.url = resValue.url;
+        userObj.url = resValue.link;
 
         document.getElementById("playList").innerHTML = userObj.url;
     }
@@ -74,6 +80,8 @@ function GetPlaylist() {
         <SideBar />
         <h1>PlayList Generator</h1>
         <p>Get a Playlist to Listen to as you Look at Zillow Properties!</p>
+        <label>PlaylistName: </label>
+        <input id ="playListNameInp"></input>
         <label>Song1: </label>
         <input id ="song1Inp"></input>
         <label>Song2: </label>
