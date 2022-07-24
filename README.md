@@ -2,8 +2,6 @@
 
 How to Request Data?
 
-GET API Request:  
-
 Make a GET request with the userName in the url link. UserName must be in the DB system, use featheru for testing purposes
 
 btzAddress = http://flip2.engr.oregonstate.edu:6363
