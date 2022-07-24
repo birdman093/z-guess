@@ -18,9 +18,12 @@ json({Url: ?})
 UML Sequence Diagrams
 
 Partner: Spotify ML App API Backend Interaction
+
 ![Screen Shot 2022-07-24 at 4 37 12 PM](https://user-images.githubusercontent.com/71615880/180664941-9a7fb295-1893-4bc2-b613-27ecbd671a51.png)
 
+
 Beat the Zestimate Get Random User Property
+
 ![Screen Shot 2022-07-24 at 4 37 51 PM](https://user-images.githubusercontent.com/71615880/180664969-afc28b2a-09ca-40d0-ae24-f082010babbe.png)
 
 
