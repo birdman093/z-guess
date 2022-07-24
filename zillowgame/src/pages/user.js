@@ -1,5 +1,5 @@
-const userObj = {userName: "", firstName:"", lastName:"", score:""}
-export default userObj
+const userObj = {userName: "", firstName:"", lastName:"", score:"", url: "No Playlist Generated"};
+export default userObj;
 
 
 

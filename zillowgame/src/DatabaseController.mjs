@@ -50,9 +50,31 @@ app.post('/GET/user', function(req, res)
     });                                              
 });
 
+app.get('/GET/spotifyproperties/:userName', function(req, res)
+{
+    //Send link to spotify playlist microservice
+    var qString = `SELECT Properties.Url FROM Logins LEFT JOIN LoginsToProperties ON Logins.UserName = ` +
+    `LoginsToProperties.UserName LEFT JOIN Properties ON LoginsToProperties.PropertyID = ` +
+    `Properties.PropertyID WHERE Logins.UserName = ? ORDER BY RAND () LIMIT 1`;
+
+    connection.query(qString, [req.params.userName],function(error, results, fields){
+        if(error){
+            res.write(JSON.stringify(error));
+            res.status(404).end();
+        }
+        console.log(results[0].Url)
+        if (results[0].Url !== null) {
+            res.json(results[0])
+        } else {
+            res.json({Url: "No Properties Found"});
+        }
+        res.status(201).end();
+        //Url to access
+    });                                                 
+});
+
 app.get('/GET/properties/:userName', function(req, res)
 {
-    //TODO: Change from * to be more nuanced to avoid password!
     var qString = `SELECT * FROM Logins LEFT JOIN LoginsToProperties ON Logins.UserName = ` +
     `LoginsToProperties.UserName LEFT JOIN Properties ON LoginsToProperties.PropertyID = ` +
     `Properties.PropertyID WHERE Logins.UserName = ?`;
@@ -131,6 +153,14 @@ app.post('/POST/guess', function(req, res)
             res.end();
         }
     });
+});
+
+// Testing out Beat the Zestimate End of Microservice
+app.post('/playlistgenerator', function(req, res)
+{
+    var NumSongsSent = req.body.tracks.length;
+    res.json({link:NumSongsSent});
+    res.end()   
 });
 
 app.listen(PORT, () => {

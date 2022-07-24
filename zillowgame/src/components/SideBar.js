@@ -10,16 +10,16 @@ export default props => {
       <a className="menu-item">Steps to Beating the Zestimate!</a>
       <ol className="menu-item">
         <li>Login Using Accounts Page.  DB Admin must add you to the system.</li>
-        <li>Use DisplayProperties to view all your properties</li>
-        <li>Add Properties by clicking add and input property data</li>
-        <li>Guess on added property on right side of property tables</li>
+        <li>Use Display Properties to view all your properties</li>
+        <li>Add Properties by inputting property data. Use a unique property ID!</li>
+        <li>Make a Guess on the sell price for the property</li>
       </ol>
       <a className="menu-item" >Future Developments</a>
       <ol className="menu-item">
-        <li>Creating Users</li>
-        <li>Input by zillow propertyID</li>
-        <li>Auto-Population of sale price</li>
-        <li>Locking property guesses</li>
+        <li>Creating User Log-Ins</li>
+        <li>Additional methods of inputs using Zillow</li>
+        <li>Auto-Population of sell price</li>
+        <li>Locking-in property guesses</li>
       </ol>
       <></>
     </Menu>

@@ -43,7 +43,7 @@ td, th {
   border: 1px solid #ddd;
   padding: 4px;
   font-size: 14px;
-  width: 65px;
+  width: 83px;
 }
 
 td.propHeader{
@@ -206,5 +206,5 @@ menu-item{
 }
 
 input{
-  width: 57px;
+  width: 75px;
 }

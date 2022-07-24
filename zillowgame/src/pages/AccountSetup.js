@@ -45,7 +45,7 @@ function AccountSetup() {
             userObj.firstName = "";
             userObj.lastName = "";
             userObj.score = "";
-            document.getElementById("Greeting").value = "No User Logged In";
+            document.getElementById("Greeting").textContent = "Invalid Sign-In: No User Logged In";
         }
     }
 
