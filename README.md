@@ -13,7 +13,7 @@ Data returned as JSON from API. If no properties are found the following entry w
 
 json({Url: ?})
 
-c.) UML Sequence Diagrams
+C.) UML Sequence Diagrams
 
 Partner: Spotify ML App API Backend Interaction
 
