@@ -1,19 +1,19 @@
 # ZillowGame
 
-How to Request Data?
+A.) How to Request Data?
 
 Make a GET request with the userName in the url link. UserName must be in the DB system, use featheru for testing purposes
 
 btzAddress = http://flip2.engr.oregonstate.edu:6363
 ${btzAddress}/GET/spotifyproperties/{UserName}
 
-How to Receive Data?
+B.) How to Receive Data?
 
 Data returned as JSON from API. If no properties are found the following entry will be returned {Url: "No Properties Found"}
 
 json({Url: ?})
 
-UML Sequence Diagrams
+c.) UML Sequence Diagrams
 
 Partner: Spotify ML App API Backend Interaction
 
