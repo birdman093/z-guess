@@ -1,83 +1,80 @@
 import React, {useEffect, useState} from "react";
 import Header from "../components/Header";
 import SideBar from "../components/SideBar";
-import EditButton from "../components/EditButton";
-import DeleteButton from "../components/DeleteButton";
-import {MdAdd, MdAirlineSeatLegroomExtra, MdCancel, MdDelete, MdEdit, MdUpdate} from "react-icons/md";
-import FilterColumn from "../components/FilterColumn";
+import {MdAdd, MdCancel} from "react-icons/md";
 import {AddressInUse} from "../ServerConstant.js";
 import ReactDOM from "react-dom";
 import userObj from "./user.js";
 
 function DisplayProperties() {
     useEffect(() => {
-        loadAptOwners();
+        loadProperties();
     }, []);
 
-    const [aptOwnerList, setAptOwnersList] = useState([]);
+    const [zillowProperties, setZillowProperties] = useState([]);
     const [addField, setAddField] = useState([])
 
-    const loadAptOwners = async () => {
+    // Load Properties Stored in DB for userName
+    const loadProperties = async () => {
         if (userObj.firstName.length === 0){
-            alert("Please Login at Account Page to View Properties")
+            alert("Please Login at Account Page to View Properties");
+            return;
         }
         const response = await fetch(`${AddressInUse}/GET/properties/${userObj.userName}`);
-        const aptOwnersList = await response.json();
-        setAptOwnersList(aptOwnersList);
+        const zillowProperties = await response.json();
+        setZillowProperties(zillowProperties);
     }
 
+    //TODO: 2.) Move this to seperate location
     function numFormat(event) {
         var tag = document.getElementById(event.target.id);
         let val = tag.value.replace(/[^0-9.]/g,'');
         tag.value = val;
     }
 
-    // add new property to be displayed
-    const addAptOwners = async() => {
+    // Add new Property to DB and update Displayed Properties
+    const addZillowLink = async() => {
         if (userObj.userName.length === 0){
             alert("Please Login at Account Page to View Properties")
+            return;
         }
-        let userName = userObj.userName;
-        let propertyID = document.getElementById("propertyIDInp").value;
-        let name = document.getElementById("nameInp").value;
-        let number = document.getElementById("numberInp").value;
-        let street = document.getElementById("streetInp").value;
-        let aptNum = document.getElementById("aptNumInp").value;
-        let town = document.getElementById("townInp").value;
-        let city = document.getElementById("cityInp").value;
-        let zipCode = document.getElementById("zipCodeInp").value;
-        let listPrice = document.getElementById("listPriceInp").value;
-        let zestimate = document.getElementById("zestimateInp").value;
         let url = document.getElementById("urlInp").value;
+        let name = document.getElementById("nameInp").value;
+        let userName = userObj.userName;
 
-        if (aptNum.length === 0){
-            aptNum = '';
+        if (url.length === 0 || !url.includes("https://www.zillow.com/homedetails/") || !url.includes("zpid") ){
+            alert("Invalid URL:  Sample format: https://www.zillow.com/homedetails/72-Hilton-Ave-Maplewood-NJ-07040/69527814_zpid/");
+            return;
         }
 
-        if (propertyID.length === 0 || name.length === 0 || number.length === 0 || street.length === 0 ||
-            town.length === 0 || city.length === 0) {
-                alert("missing field!")
-                return
+        if (name.length === 0){
+            alert("Please Name your property");
+            return;
         }
-        const newAptOwner = {userName, propertyID, name, number, street, aptNum, town, city, zipCode, listPrice, zestimate, url}
-     
+
+        
+        const newLink = {name,url,userName};
         const response = await fetch(`${AddressInUse}/POST/properties`, {
             method: 'POST',
-            body: JSON.stringify(newAptOwner),
+            body: JSON.stringify(newLink),
             headers: {
                 'Content-Type': 'application/json'
             }
         });
+        
+        //TODO: 1.) CHANGE THIS URL RESPONSE TO BE THE ADDRESS
+        //const addedProp = await response.json();
+        // if added property --> url thing
         if(response.status === 201){
-            alert(`Successfully added ${propertyID}!`);
-            loadAptOwners();
+            alert(`Successfully added ${url}!`);
+            loadProperties();
             removeAddClick();
         } else {
             if (response.status === 410) {
-                alert(`Failed to add PropertyID: ${propertyID} due to Duplicate Entry in DB, Server code = ${response.status}`)
+                alert(`Failed to add ${url} due to Duplicate Entry in DB, Server code = ${response.status}`)
             } else {
                 console.log(response)
-                alert(`Failed to add PropertyID: ${propertyID} due to DB Error Code: ${response.status}, Server code = ${response.status}`);
+                alert(`Failed to add ${url} due to DB Error Code: ${response.status}, Server code = ${response.status}`);
             }
         }
     }
@@ -88,7 +85,6 @@ function DisplayProperties() {
         if (userObj.userName.length === 0){
             alert("Please Login to view Properties at the Account Page")
         }
-        console.log(aptOwner)
         let propertyID = aptOwner.PropertyID;
         let guess = document.getElementById("guessInp"+propertyID).value;
         let userName = userObj.userName;
@@ -103,7 +99,7 @@ function DisplayProperties() {
         });
         if(response.status === 201){
             alert(`Successfully added ${propertyID} guess!`);
-            loadAptOwners();
+            loadProperties();
         } else {
             if (response.status === 410) {
                 alert(`Failed to add ${propertyID} guess due to Duplicate Entry in DB, Server code = ${response.status}`)
@@ -114,40 +110,29 @@ function DisplayProperties() {
     }
 
     // UI Input for Properties
-    const AptOwnerInput = () => {
-        return <tr>
-                    <td><input id="propertyIDInp" placeholder="Distinct ID" onKeyUp={(id) => numFormat(id)}/></td>
-                    <td><input id="nameInp" placeholder="Nickname"/></td>
-                    <td><input id="numberInp" placeholder="House #"/></td>
-                    <td><input id="streetInp" placeholder="Street name"/></td>
-                    <td><input id="aptNumInp" placeholder="[Optional] apt #"/></td>
-                    <td><input id="townInp" placeholder="Town"/></td>
-                    <td><input id="cityInp" placeholder="City"/></td>
-                    <td><input id="zipCodeInp" placeholder="ZipCode" onKeyUp={(id) => numFormat(id)}/></td>
-                    <td><input id="listPriceInp" placeholder="list price" onKeyUp={(id) => numFormat(id)}/></td>
-                    <td><input id="zestimateInp" placeholder="zestimate" onKeyUp={(id) => numFormat(id)}/></td>
-                    <td></td>
-                    <td><input id="urlInp" placeholder="zillow url"/></td>
-                    <td><MdAdd onClick = {addAptOwners}/></td>
-                    <td><MdCancel onClick = {removeAddClick}/></td>
-                    <td></td>
-                </tr>
+    const PropertyLinkInput = () => {
+        return <div>
+                    <input className = "newPropAdd" id="nameInp" placeholder="Property Description i.e Snake House"/>
+                    <input className = "newPropAdd" id="urlInp" placeholder="Zillow URL link i.e. https://www.zillow.com/homedetails/123-Generic-Ave-City-State-07080/40084001_zpid/"/>
+                    <MdAdd className = "newPropAdd" onClick = {addZillowLink}/>
+                    <MdCancel className = "newPropAdd" onClick = {removeAddClick}/>
+                </div>
     };
 
     
     const onAddClick = event => {
-        setAddField(<AptOwnerInput/>);
+        setAddField(<PropertyLinkInput/>);
     };
 
     const removeAddClick = event => {
         setAddField();
     };
 
-    const AddGuessInput = async(aptOwner) => {
-        let guess = document.getElementById("guessInp"+aptOwner.PropertyID).value
+    const AddGuessInput = async(property) => {
+        let guess = document.getElementById("guessInp"+property.PropertyID).value
         if (guess.length > 3 && guess.length < 10){
             console.log("validGuess")
-            addGuess(aptOwner);
+            addGuess(property);
         } else if (guess.length < 4) {
             alert("Invalid Guess: Guess must be greater than $999");
         } else if (guess.length > 10) {
@@ -158,60 +143,57 @@ function DisplayProperties() {
     }
 
     // Display Rows of Data
-    function AptOwnerList({aptOwners}) {
+    function PropertyDisplay({properties}) {
         return (
-            <table>
-                <thead>
-                    <tr>
-                        <td class = "propHeader">PropertyID</td>
-                        <td class = "propHeader">Name</td>
-                        <td class = "propHeader">Number</td>
-                        <td class = "propHeader">Street</td>
-                        <td class = "propHeader">AptNum</td>
-                        <td class = "propHeader">Town</td>
-                        <td class = "propHeader">City</td>
-                        <td class = "propHeader">ZipCode</td>
-                        <td class = "propHeader">ListPrice</td>
-                        <td class = "propHeader">Zestimate</td>
-                        <td class = "propHeader">Sell Price</td>
-                        <td class = "propHeader">URL</td>
-                        <td class = "propHeader">Guess</td>
-                        <td class = "propHeader">     </td>
-                        <td class = "propHeader">     </td>
-                    </tr>
-                </thead>
-                <tbody>
-                    {addField}
-                    {aptOwners.map((aptOwner, idx) => <AptOwner aptOwner={aptOwner} key={idx} />)}
-                </tbody>
-            </table>
+            <div>
+                {addField}
+                <table>
+                    <thead>
+                        <tr>
+                            <td className = "propHeader">PropertyID</td>
+                            <td className = "propHeader">Name</td>
+                            <td className = "propHeader">StreetAddress</td>
+                            <td className = "propHeader">City</td>
+                            <td className = "propHeader">State</td>
+                            <td className = "propHeader">ZipCode</td>
+                            <td className = "propHeader">ListPrice</td>
+                            <td className = "propHeader">Zestimate</td>
+                            <td className = "propHeader">Sell Price</td>
+                            <td className = "propHeader">URL</td>
+                            <td className = "propHeader">Guess</td>
+                            <td className = "propHeader">     </td>
+                            <td className = "propHeader">     </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {properties.map((property, idx) => <PropertyMap property={property} key={idx} />)}
+                    </tbody>
+                </table>
+            </div>
         );
     }
 
 
     // Mapping Function
-    function AptOwner({ aptOwner}) {
+    function PropertyMap({property}) {
         return (
-            <tr id={aptOwner.PropertyID}>
-                <td>{aptOwner.PropertyID}</td>
-                <td>{aptOwner.Name}</td>
-                <td>{aptOwner.Number}</td>
-                <td>{aptOwner.Street}</td>
-                <td>{aptOwner.AptNum}</td>
-                <td>{aptOwner.Town}</td>
-                <td>{aptOwner.City}</td>
-                <td>{aptOwner.ZipCode}</td>
-                <td>{aptOwner.ListPrice}</td>
-                <td>{aptOwner.Zestimate}</td>
-                <td>{aptOwner.SellPrice}</td>
-                <td>{aptOwner.Url}</td>
-                <td>{aptOwner.Guess}</td>
-                <td><MdAdd onClick={() => AddGuessInput(aptOwner)}/></td>
-                <td><input id = {"guessInp"+aptOwner.PropertyID} onKeyUp={(id) => numFormat(id)} placeholder="enter guess!"/></td>
+            <tr id={property.PropertyID}>
+                <td>{property.PropertyID}</td>
+                <td>{property.Name}</td>
+                <td>{property.StreetAddress}</td>
+                <td>{property.Town}</td>
+                <td>{property.City}</td>
+                <td>{property.ZipCode}</td>
+                <td>{property.ListPrice}</td>
+                <td>{property.Zestimate}</td>
+                <td>{property.SellPrice}</td>
+                <td>{property.Url}</td>
+                <td>{property.Guess}</td>
+                <td><MdAdd onClick={() => AddGuessInput(property)}/></td>
+                <td><input id = {"guessInp"+property.PropertyID} onKeyUp={(id) => numFormat(id)} placeholder="enter guess!"/></td>
             </tr>
         );
     }
-
 
     // Base Page Template
     return(
@@ -221,7 +203,7 @@ function DisplayProperties() {
         <h1>Display Past, Present, and Future Guess Properties</h1>
         <p>Add new properties, Guess on existing properties, or Wait for results to come in on sold properties!</p>
         <button onClick={onAddClick}>+ Add New Item</button>
-        <AptOwnerList aptOwners={aptOwnerList}/>
+        <PropertyDisplay properties={zillowProperties}/>
         </>
     )
 }

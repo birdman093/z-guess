@@ -1,10 +1,10 @@
-import express from 'express';
+import express, { response } from 'express';
 const PORT = 6363;
 import mysql from 'mysql';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-//import connection from './DatabaseConnection.js'
-//TODO: Connection not importing?
+import axios from 'axios';
+import config from './config';
 
 //ERROR CODES
 //404 -- PAGE NOT FOUND -- DB NOT WORKING DURING SELECTION
@@ -12,15 +12,12 @@ import bodyParser from 'body-parser';
 //406 -- ERROR DURING PUT
 //407 -- ERROR DURING INSERT
 //410 -- INSERT/ PUT -- DUPLICATE ENTRY
+//415 -- ZILLOW API FAILURE
 //425 -- PUT ERROR -- NO update has been made
 
 
-var connection = mysql.createConnection({
-    host: 'classmysql.engr.oregonstate.edu',
-    user: 'cs361_featheru',
-    password: '9999',
-    database: 'cs361_featheru'
-});
+// Connect to DB
+var connection = mysql.createConnection(config.db);
 
 connection.connect(function(err) {
     if (err) {
@@ -30,13 +27,13 @@ connection.connect(function(err) {
     console.log('connected as id ' + connection.threadId);
 });
 
-
+// Set up 
 const app = express();
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
-//  LazyMan's Password Validation  --> need to figure out hashing approach
+//  LazyMan's Password Validation  --> future to use hashing approach
 app.post('/GET/user', function(req, res)
 {
     var sql = `SELECT FirstName, LastName, Score FROM Logins WHERE UserName = ? AND Password = ?`;
@@ -91,47 +88,53 @@ app.get('/GET/properties/:userName', function(req, res)
 
 app.post('/POST/properties', function(req, res)
 {
-    var sql = "INSERT INTO `Properties`(`PropertyID`, `Name`, `Number`, `Street`," +
-     "`AptNum`, `Town`, `City`, `ZipCode`, `ListPrice`, `Zestimate`, `SellPrice`, `Url`)" +
-     " VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
-    
-     let aptNum = req.body.aptNum;
-    if (req.body.aptNum.length == 0){
-        aptNum = null;
-    }
+    // modify RAPID API options to include property URL
+    const options = config.rapidAPI
+    options.params.property_url = req.body.url;
 
-    var inserts = [req.body.propertyID, req.body.name, req.body.number, req.body.street, aptNum, 
-    req.body.town, req.body.city, req.body.zipCode, req.body.listPrice, req.body.zestimate, null, req.body.url];
-
-    connection.query(sql,inserts,function(error, results, fields){
-        if(error){
-            if (error.code === "ER_DUP_ENTRY") {
-                res.status(410);
-            } else {
-                res.status(407);
-            }
-            res.write(JSON.stringify(error));
-            res.end();
-        }else{
-            res.status(201);
-            //res.end();
-            var sql2 = "INSERT INTO `LoginsToProperties`(`UserName`, `PropertyID`, `Guess`) VALUES (?, ?, ?)";
-            var inserts2 = [req.body.userName, req.body.propertyID, null];
-            connection.query(sql2,inserts2,function(error, results, fields){
-                if(error){
-                    if (error.code === "ER_DUP_ENTRY") {
-                        res.status(410);
-                    } else {
-                        res.status(407);
-                    }
-                    res.write(JSON.stringify(error));
-                    res.end();
-                }else{
-                    res.status(201);
-                    res.end();
+    const response = axios.request(options);
+    response.then((response) => {
+        var inserts = [response.data.zpid, req.body.name, response.data.address.streetAddress, response.data.address.city, 
+            response.data.address.state, response.data.address.zipcode, response.data.price, response.data.zestimate, null, req.body.url];
+        var sql = "INSERT INTO `Properties`(`PropertyID`, `Name`, `StreetAddress`, `City`, `State`," +
+         "`ZipCode`, `ListPrice`, `Zestimate`, `SellPrice`, `Url`)" + " VALUES (?,?,?,?,?,?,?,?,?,?)";
+        console.log(inserts)
+        connection.query(sql,inserts,function(error, results, fields){
+            if(error){
+                if (error.code === "ER_DUP_ENTRY") {
+                    res.status(410);
+                } else {
+                    res.status(407);
                 }
-            });
-        }
+                res.write(JSON.stringify(error));
+                res.end();
+            }else{
+                res.status(201);
+                var sql2 = "INSERT INTO `LoginsToProperties`(`UserName`, `PropertyID`, `Guess`) VALUES (?, ?, ?)";
+                var inserts2 = [req.body.userName, response.data.zpid, null];
+                connection.query(sql2,inserts2,function(error, results, fields){
+                    if(error){
+                        if (error.code === "ER_DUP_ENTRY") {
+                            res.status(410);
+                        } else {
+                            res.status(407);
+                        }
+                        res.write(JSON.stringify(error));
+                        res.end();
+                    }else{
+                        res.status(201);
+                        res.end();
+                    }
+                });
+            }
+        });
+        
+    })
+    .catch((error) => {
+        console.log(error)
+        res.status(415);
+        res.write(JSON.stringify("ERROR WITH ZILLOW API"));
+        res.end();
     });
 });
 

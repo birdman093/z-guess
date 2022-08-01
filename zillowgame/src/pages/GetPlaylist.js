@@ -1,13 +1,9 @@
 import React, {useEffect, useState} from "react";
 import Header from "../components/Header";
 import SideBar from "../components/SideBar";
-import EditButton from "../components/EditButton";
-import DeleteButton from "../components/DeleteButton";
-import {MdAdd, MdCancel, MdDelete, MdEdit, MdUpdate} from "react-icons/md";
-import FilterColumn from "../components/FilterColumn";
 import {AddressInUse,SpotifyAddress} from "../ServerConstant.js";
-import ReactDOM from "react-dom";
 import userObj from "./user.js";
+import ReactDOM from "react-dom";
 
 function GetPlaylist() {
     // Label that says to add up to 5 songs
@@ -17,6 +13,8 @@ function GetPlaylist() {
 
     const GetSpotifyPlaylist = async () => {
         let title = document.getElementById("playListNameInp").value;
+
+        //TODO: 3.) For loop through songs to add up to 5 rather than 5 distinct entries
         let song1 = document.getElementById("song1Inp").value;
         let song2 = document.getElementById("song2Inp").value;
         let song3 = document.getElementById("song3Inp").value;
@@ -25,12 +23,12 @@ function GetPlaylist() {
         const tracks = [];
 
 
-        if (song1.length == 0) {
-            alert("Must Have at least one song in first slot")
+        if (song1.length === 0) {
+            alert("Must Have at least one song in first slot");
             return;
         }
 
-        if (title.length == 0) {
+        if (title.length === 0) {
             alert("Must enter a playlist Name!")
             return;
         }
@@ -61,7 +59,7 @@ function GetPlaylist() {
     const GetLink = async () => {
         let UserName = userObj.userName
 
-        if (UserName.length == 0) {
+        if (UserName.length === 0) {
             alert("Must Log-In to get url link")
             return
         }
