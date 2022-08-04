@@ -4,7 +4,7 @@ import mysql from 'mysql';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import axios from 'axios';
-import config from './config';
+import config from './config.js';
 
 //ERROR CODES
 //404 -- PAGE NOT FOUND -- DB NOT WORKING DURING SELECTION
@@ -50,7 +50,7 @@ app.post('/GET/user', function(req, res)
 app.get('/GET/spotifyproperties/:userName', function(req, res)
 {
     //Send link to spotify playlist microservice
-    var qString = `SELECT Properties.Url FROM Logins LEFT JOIN LoginsToProperties ON Logins.UserName = ` +
+    var qString = `SELECT Properties.Url, Properties.Image FROM Logins LEFT JOIN LoginsToProperties ON Logins.UserName = ` +
     `LoginsToProperties.UserName LEFT JOIN Properties ON LoginsToProperties.PropertyID = ` +
     `Properties.PropertyID WHERE Logins.UserName = ? ORDER BY RAND () LIMIT 1`;
 
@@ -95,9 +95,10 @@ app.post('/POST/properties', function(req, res)
     const response = axios.request(options);
     response.then((response) => {
         var inserts = [response.data.zpid, req.body.name, response.data.address.streetAddress, response.data.address.city, 
-            response.data.address.state, response.data.address.zipcode, response.data.price, response.data.zestimate, null, req.body.url];
+            response.data.address.state, response.data.address.zipcode, response.data.price, response.data.zestimate, null, 
+            req.body.url, response.data.imgSrc];
         var sql = "INSERT INTO `Properties`(`PropertyID`, `Name`, `StreetAddress`, `City`, `State`," +
-         "`ZipCode`, `ListPrice`, `Zestimate`, `SellPrice`, `Url`)" + " VALUES (?,?,?,?,?,?,?,?,?,?)";
+         "`ZipCode`, `ListPrice`, `Zestimate`, `SellPrice`, `Url`,`Image`)" + " VALUES (?,?,?,?,?,?,?,?,?,?,?)";
         console.log(inserts)
         connection.query(sql,inserts,function(error, results, fields){
             if(error){
