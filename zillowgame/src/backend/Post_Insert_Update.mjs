@@ -4,13 +4,7 @@ import { CalcPropScore } from "./ZillowPrice.mjs";
 export function Insert(req, res, sql, inserts, connection) {
     connection.query(sql,inserts,function(error, results, fields){
         if(error){
-            if (error.code === "ER_DUP_ENTRY") {
-                res.status(410);
-            } else {
-                res.status(407);
-            }
-            res.write(JSON.stringify(error));
-            res.end();
+            SQLError(error, res, 407)
         }else{
             res.status(201);
             res.end();
@@ -25,13 +19,7 @@ export function Insert_UpdateScore(req, res, connection) {
 
     connection.query(sql,inserts,function(error, results, fields){
         if(error){
-            if (error.code === "ER_DUP_ENTRY") {
-                res.status(410);
-            } else {
-                res.status(407);
-            }
-            res.write(JSON.stringify(error));
-            res.end();
+            SQLError(error, res, 407);
         }else{
             if (req.body.sellPrice !== null){
                 var newScore = req.body.score + CalcPropScore(req.body.sellPrice, req.body.guess);
@@ -46,17 +34,21 @@ export function Insert_UpdateScore(req, res, connection) {
     });
 }
 
+export function SQLError(error, res, code){
+    if (error.code === "ER_DUP_ENTRY") {
+        res.status(410);
+    } else {
+        res.status(code);
+    }
+    res.write(JSON.stringify(error));
+    res.end();
+}
+
 // Generic update Query into SQL DB
 function Update(req, res, sql, inserts, connection){
     connection.query(sql,inserts,function(error, results, fields){
         if(error){
-            if (error.code === "ER_DUP_ENTRY") {
-                res.status(410);
-            } else {
-                res.status(406);
-            }
-            res.write(JSON.stringify(error));
-            res.end();
+            SQLError(error, res, 406)
         }else{
             res.status(201);
             res.end();

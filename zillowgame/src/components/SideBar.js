@@ -2,7 +2,6 @@ import React from 'react';
 import { slide as Menu } from 'react-burger-menu';
 import beaver from './WinkyBeaverJPG.jpg';
 import ReactDOM from "react-dom";
-//TODO: ADD in scroll bar here??????
 
 const props = () => {
   return (
@@ -13,15 +12,10 @@ const props = () => {
       <ol className="menu-item">
         <li>Login Using Accounts Page.  DB Admin must add you to the system.</li>
         <li>Use Display Properties to view all your properties</li>
-        <li>Add Properties by inputting property data. Use a unique property ID!</li>
+        <li>Add Properties by Zillow link and create a name to remember the property</li>
         <li>Make a Guess on the sell price for the property</li>
-      </ol>
-      <h3 className="menu-item" >Future Developments</h3>
-      <ol className="menu-item">
-        <li>Creating User Log-Ins</li>
-        <li>Additional methods of inputs using Zillow</li>
-        <li>Auto-Population of sell price</li>
-        <li>Locking-in property guesses</li>
+        <li>Watch your score update based on our proprietary scoring system when it sells</li>
+        <li>Make a spotify playlist by inserting 5 songs to keep you entertained!</li>
       </ol>
       <></>
     </Menu>
