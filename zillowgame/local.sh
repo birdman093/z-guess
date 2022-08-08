@@ -1,3 +1,3 @@
 #!/bin/bash
-node src/DatabaseController.mjs &
+node src/backend/DatabaseController.mjs &
 npm start

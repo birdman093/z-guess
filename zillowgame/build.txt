@@ -1,0 +1,8 @@
+PreBuild Notes:
+Change ServerConstant.js to Deploy
+Build React App
+Upload to Github
+Download from Github to Server
+Delete previous pm2 apps
+Deploy using bash script
+

@@ -5,6 +5,10 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import axios from 'axios';
 import config from './config.js';
+import dbSetup from './dbSetup.mjs'
+import GetQuery from './Get.mjs';
+import {Insert, Insert_UpdateScore} from './Post_Insert_Update.mjs';
+import {GetZillowPrice} from './ZillowPrice.mjs';
 
 //ERROR CODES
 //404 -- PAGE NOT FOUND -- DB NOT WORKING DURING SELECTION
@@ -15,38 +19,30 @@ import config from './config.js';
 //415 -- ZILLOW API FAILURE
 //425 -- PUT ERROR -- NO update has been made
 
-
-// Connect to DB
-var connection = mysql.createConnection(config.db);
-
-connection.connect(function(err) {
-    if (err) {
-        console.error('error connecting: ' + err.stack);
-        return;
-    }
-    console.log('connected as id ' + connection.threadId);
-});
-
-// Set up 
+//Connect DB and API setup
+var connection = dbSetup();
 const app = express();
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
-//  LazyMan's Password Validation  --> future to use hashing approach
+//  Account Login: LazyMan's Password Validation. Validates userName and Password against DB
 app.post('/GET/user', function(req, res)
 {
-    var sql = `SELECT FirstName, LastName, Score FROM Logins WHERE UserName = ? AND Password = ?`;
-    connection.query(sql, [req.body.userName, req.body.password], function(error, results, fields){
-        if(error){
-            res.write(JSON.stringify(error));
-            res.status(404).end();
-        }
-        res.json(results);
-        res.status(201).end();
-    });                                              
+    var sql = `SELECT UserName, FirstName, LastName, Score FROM Logins WHERE UserName = ? AND Password = ?`;
+    var inserts = [req.body.userName, req.body.password]
+    GetQuery(connection, sql, inserts, req, res);                                            
 });
 
+//  Get Score for an individual user
+app.post('/GET/user/score', function(req, res)
+{
+    var sql = `SELECT Score FROM Logins WHERE UserName = ?`;
+    var inserts = [req.body.userName]
+    GetQuery(connection, sql, inserts, req, res);                                            
+});
+
+// Random User Property Link MicroService:  Used by Spotify Microservice
 app.get('/GET/spotifyproperties/:userName', function(req, res)
 {
     //Send link to spotify playlist microservice
@@ -59,17 +55,16 @@ app.get('/GET/spotifyproperties/:userName', function(req, res)
             res.write(JSON.stringify(error));
             res.status(404).end();
         }
-        console.log(results[0].Url)
         if (results[0].Url !== null) {
             res.json(results[0])
         } else {
             res.json({Url: "No Properties Found"});
         }
         res.status(201).end();
-        //Url to access
     });                                                 
 });
 
+// Returns all properties for a given user that a guess had been entered
 app.get('/GET/properties/:userName', function(req, res)
 {
     var qString = `SELECT * FROM Logins LEFT JOIN LoginsToProperties ON Logins.UserName = ` +
@@ -88,18 +83,20 @@ app.get('/GET/properties/:userName', function(req, res)
 
 app.post('/POST/properties', function(req, res)
 {
-    // modify RAPID API options to include property URL
+    // RAPID API options set to search for input property URL (partially validated on front end)
     const options = config.rapidAPI
     options.params.property_url = req.body.url;
 
+    //TODO: Test linkage
     const response = axios.request(options);
     response.then((response) => {
+        let [listPrice, sellPrice] = GetZillowPrice(response.data.priceHistory);
+        //response.data.price
         var inserts = [response.data.zpid, req.body.name, response.data.address.streetAddress, response.data.address.city, 
-            response.data.address.state, response.data.address.zipcode, response.data.price, response.data.zestimate, null, 
+            response.data.address.state, response.data.address.zipcode, listPrice, response.data.zestimate, sellPrice, 
             req.body.url, response.data.imgSrc];
         var sql = "INSERT INTO `Properties`(`PropertyID`, `Name`, `StreetAddress`, `City`, `State`," +
          "`ZipCode`, `ListPrice`, `Zestimate`, `SellPrice`, `Url`,`Image`)" + " VALUES (?,?,?,?,?,?,?,?,?,?,?)";
-        console.log(inserts)
         connection.query(sql,inserts,function(error, results, fields){
             if(error){
                 if (error.code === "ER_DUP_ENTRY") {
@@ -110,23 +107,9 @@ app.post('/POST/properties', function(req, res)
                 res.write(JSON.stringify(error));
                 res.end();
             }else{
-                res.status(201);
                 var sql2 = "INSERT INTO `LoginsToProperties`(`UserName`, `PropertyID`, `Guess`) VALUES (?, ?, ?)";
                 var inserts2 = [req.body.userName, response.data.zpid, null];
-                connection.query(sql2,inserts2,function(error, results, fields){
-                    if(error){
-                        if (error.code === "ER_DUP_ENTRY") {
-                            res.status(410);
-                        } else {
-                            res.status(407);
-                        }
-                        res.write(JSON.stringify(error));
-                        res.end();
-                    }else{
-                        res.status(201);
-                        res.end();
-                    }
-                });
+                Insert(req, res, sql2, inserts2, connection);
             }
         });
         
@@ -141,25 +124,10 @@ app.post('/POST/properties', function(req, res)
 
 app.post('/POST/guess', function(req, res)
 {
-    var sql = "UPDATE LoginsToProperties SET Guess = ? WHERE UserName = ? AND PropertyID = ?" 
-    var inserts = [req.body.guess, req.body.userName, req.body.propertyID, ];
-    connection.query(sql,inserts,function(error, results, fields){
-        if(error){
-            if (error.code === "ER_DUP_ENTRY") {
-                res.status(410);
-            } else {
-                res.status(407);
-            }
-            res.write(JSON.stringify(error));
-            res.end();
-        }else{
-            res.status(201);
-            res.end();
-        }
-    });
+    Insert_UpdateScore(req, res, connection);
 });
 
-// Testing out Beat the Zestimate End of Microservice
+// For Internal Testing Only
 app.post('/playlistgenerator', function(req, res)
 {
     var NumSongsSent = req.body.tracks.length;

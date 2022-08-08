@@ -1,3 +1,5 @@
+#TEST for Spotify MicroService
+
 import requests
 
 response = requests.post('http://flip3.engr.oregonstate.edu:23401/playlistgenerator', json={

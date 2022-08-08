@@ -43,7 +43,6 @@ td, th {
   border: 1px solid #ddd;
   padding: 4px;
   font-size: 14px;
-  width: 83px;
 }
 
 td.propHeader{
@@ -56,6 +55,17 @@ input.newPropAdd{
   width: 250px;
   margin: 5px 20px 5px 20px;
 
+}
+
+input.accountAdd{
+  font-size: 12px;
+  width: 150px;
+  margin: 5px 20px 5px 20px;
+
+}
+
+button.addButton{
+  margin: 10px 5px 10px 5px;
 }
 
 tr:nth-child(even){background-color: #f2f2f2;}

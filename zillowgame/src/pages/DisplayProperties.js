@@ -2,93 +2,89 @@ import React, {useEffect, useState} from "react";
 import Header from "../components/Header";
 import SideBar from "../components/SideBar";
 import {MdAdd, MdCancel} from "react-icons/md";
-import {AddressInUse} from "../ServerConstant.js";
+import {AddressInUse} from "../backend/ServerConstant.js";
 import ReactDOM from "react-dom";
-import userObj from "./user.js";
+import userObj from "../frontend/UserProps.mjs";
+import {numFormat, priceFormat, guessFormat} from "../frontend/InputFormat.mjs";
+import { UserLoggedIn, UpdateUserScore } from "../frontend/UpdateUser.mjs";
+import {ValidateProperty, InvalidPostResponse} from "../frontend/ValidateProperty.mjs";
 
 function DisplayProperties() {
     useEffect(() => {
         loadProperties();
+        loadScore();
     }, []);
 
     const [zillowProperties, setZillowProperties] = useState([]);
-    const [addField, setAddField] = useState([])
+    const [userScore, setUserScore] = useState([]);
+    const [addField, setAddField] = useState([]);
 
     // Load Properties Stored in DB for userName
     const loadProperties = async () => {
-        if (userObj.firstName.length === 0){
-            alert("Please Login at Account Page to View Properties");
-            return;
-        }
+        if (!UserLoggedIn()) {return;}
+
         const response = await fetch(`${AddressInUse}/GET/properties/${userObj.userName}`);
         const zillowProperties = await response.json();
         setZillowProperties(zillowProperties);
     }
 
-    //TODO: 2.) Move this to seperate location
-    function numFormat(event) {
-        var tag = document.getElementById(event.target.id);
-        let val = tag.value.replace(/[^0-9.]/g,'');
-        tag.value = val;
+    // Load Score Stored in DB for userName
+    const loadScore = async () => {
+        if (!UserLoggedIn()) {return;}
+
+        let userName = userObj.userName;
+        const userLogin = {userName};
+        const response = await fetch(`${AddressInUse}/GET/user/score`, {
+            method: 'POST',
+            body: JSON.stringify(userLogin),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const resValue = await response.json();
+        console.log(resValue);
+        console.log(resValue[0].Score);
+        UpdateUserScore(resValue[0].Score);
+        const userScore = resValue[0].Score;
+        setUserScore(userScore);
     }
 
     // Add new Property to DB and update Displayed Properties
     const addZillowLink = async() => {
-        if (userObj.userName.length === 0){
-            alert("Please Login at Account Page to View Properties")
-            return;
-        }
+
+        if (!UserLoggedIn()) {return;}
+
         let url = document.getElementById("urlInp").value;
         let name = document.getElementById("nameInp").value;
+        if (!ValidateProperty(url,name)) {return;}
+
         let userName = userObj.userName;
 
-        if (url.length === 0 || !url.includes("https://www.zillow.com/homedetails/") || !url.includes("zpid") ){
-            alert("Invalid URL:  Sample format: https://www.zillow.com/homedetails/72-Hilton-Ave-Maplewood-NJ-07040/69527814_zpid/");
-            return;
-        }
-
-        if (name.length === 0){
-            alert("Please Name your property");
-            return;
-        }
-
-        
-        const newLink = {name,url,userName};
         const response = await fetch(`${AddressInUse}/POST/properties`, {
             method: 'POST',
-            body: JSON.stringify(newLink),
+            body: JSON.stringify({name,url,userName}),
             headers: {
                 'Content-Type': 'application/json'
             }
         });
         
-        //TODO: 1.) CHANGE THIS URL RESPONSE TO BE THE ADDRESS
-        //const addedProp = await response.json();
-        // if added property --> url thing
         if(response.status === 201){
             alert(`Successfully added ${url}!`);
             loadProperties();
             removeAddClick();
         } else {
-            if (response.status === 410) {
-                alert(`Failed to add ${url} due to Duplicate Entry in DB, Server code = ${response.status}`)
-            } else {
-                console.log(response)
-                alert(`Failed to add ${url} due to DB Error Code: ${response.status}, Server code = ${response.status}`);
-            }
+            InvalidPostResponse(response, url);
         }
     }
 
     // add new property to be displayed
-    const addGuess = async(aptOwner) => {
-        console.log("here");
-        if (userObj.userName.length === 0){
-            alert("Please Login to view Properties at the Account Page")
-        }
-        let propertyID = aptOwner.PropertyID;
+    const addGuess = async(property) => {
+        let propertyID = property.PropertyID; let sellPrice = property.SellPrice;
         let guess = document.getElementById("guessInp"+propertyID).value;
-        let userName = userObj.userName;
-        const newGuess = {propertyID, userName, guess}
+        let userName = userObj.userName; let score = userObj.score;
+        
+        const newGuess = {propertyID, sellPrice, score, userName, guess};
      
         const response = await fetch(`${AddressInUse}/POST/guess`, {
             method: 'POST',
@@ -100,12 +96,9 @@ function DisplayProperties() {
         if(response.status === 201){
             alert(`Successfully added ${propertyID} guess!`);
             loadProperties();
+            loadScore();
         } else {
-            if (response.status === 410) {
-                alert(`Failed to add ${propertyID} guess due to Duplicate Entry in DB, Server code = ${response.status}`)
-            } else {
-                alert(`Failed to add ${propertyID} guess due to DB Error Code: ${response.status}, Server code = ${response.status}`);
-            }
+            InvalidPostResponse(response, propertyID);
         }
     }
 
@@ -117,6 +110,22 @@ function DisplayProperties() {
                     <MdAdd className = "newPropAdd" onClick = {addZillowLink}/>
                     <MdCancel className = "newPropAdd" onClick = {removeAddClick}/>
                 </div>
+    };
+
+    const GuessInputDisplay = (property) => {
+        if (property.SellPrice === null || property.Guess === null){
+            return <input id = {"guessInp"+property.PropertyID} onKeyUp={(id) => numFormat(id)} placeholder="enter guess!"/>
+        } else {
+            return
+        }
+    }
+
+    const GuessInputAddDisplay = (property) => {
+        if (property.SellPrice === null || property.Guess === null){
+            return <MdAdd onClick={() => AddGuessInput(property)}/>
+        } else {
+            return
+        }
     };
 
     
@@ -131,7 +140,6 @@ function DisplayProperties() {
     const AddGuessInput = async(property) => {
         let guess = document.getElementById("guessInp"+property.PropertyID).value
         if (guess.length > 3 && guess.length < 10){
-            console.log("validGuess")
             addGuess(property);
         } else if (guess.length < 4) {
             alert("Invalid Guess: Guess must be greater than $999");
@@ -150,19 +158,19 @@ function DisplayProperties() {
                 <table>
                     <thead>
                         <tr>
-                            <td className = "propHeader">PropertyID</td>
-                            <td className = "propHeader">Name</td>
-                            <td className = "propHeader">StreetAddress</td>
-                            <td className = "propHeader">City</td>
-                            <td className = "propHeader">State</td>
-                            <td className = "propHeader">ZipCode</td>
-                            <td className = "propHeader">ListPrice</td>
-                            <td className = "propHeader">Zestimate</td>
-                            <td className = "propHeader">Sell Price</td>
-                            <td className = "propHeader">URL</td>
-                            <td className = "propHeader">Guess</td>
-                            <td className = "propHeader">     </td>
-                            <td className = "propHeader">     </td>
+                            <td width = "75px" className = "propHeader">PropertyID</td>
+                            <td width = "200px" className = "propHeader">Name</td>
+                            <td width = "250px" className = "propHeader">URL</td>
+                            <td width = "200px" className = "propHeader">StreetAddress</td>
+                            <td width = "100px" className = "propHeader">City</td>
+                            <td width = "35px" className = "propHeader">State</td>
+                            <td width = "50px" className = "propHeader">ZipCode</td>
+                            <td width = "75px" className = "propHeader">ListPrice</td>
+                            <td width = "75px" className = "propHeader">Zestimate</td>
+                            <td width = "75px" className = "propHeader">Sell Price</td>
+                            <td width = "75px" className = "propHeader">Guess</td>
+                            <td width = "75px"className = "propHeader">     </td>
+                            <td width = "25px"className = "propHeader">     </td>
                         </tr>
                     </thead>
                     <tbody>
@@ -180,17 +188,19 @@ function DisplayProperties() {
             <tr id={property.PropertyID}>
                 <td>{property.PropertyID}</td>
                 <td>{property.Name}</td>
+                <td>
+                    <a href = {property.Url}>{property.StreetAddress + " " + property.City + ", " + property.State}</a>
+                </td>
                 <td>{property.StreetAddress}</td>
-                <td>{property.Town}</td>
                 <td>{property.City}</td>
+                <td>{property.State}</td>
                 <td>{property.ZipCode}</td>
-                <td>{property.ListPrice}</td>
-                <td>{property.Zestimate}</td>
-                <td>{property.SellPrice}</td>
-                <td>{property.Url}</td>
-                <td>{property.Guess}</td>
-                <td><MdAdd onClick={() => AddGuessInput(property)}/></td>
-                <td><input id = {"guessInp"+property.PropertyID} onKeyUp={(id) => numFormat(id)} placeholder="enter guess!"/></td>
+                <td>{priceFormat(property.ListPrice)}</td>
+                <td>{priceFormat(property.Zestimate)}</td>
+                <td>{guessFormat(property.Guess,property.SellPrice)}</td>
+                <td>{priceFormat(property.Guess)}</td>
+                <td>{GuessInputDisplay(property)}</td>
+                <td>{GuessInputAddDisplay(property)}</td>
             </tr>
         );
     }
@@ -200,9 +210,10 @@ function DisplayProperties() {
         <>
         <Header/>
         <SideBar />
-        <h1>Display Past, Present, and Future Guess Properties</h1>
-        <p>Add new properties, Guess on existing properties, or Wait for results to come in on sold properties!</p>
-        <button onClick={onAddClick}>+ Add New Item</button>
+        <h1>User Property History</h1>
+        <p className = "addButton" id = "userScore">{userObj.firstName + " " + userObj.lastName + " Score: " + userScore}</p>
+        <p>Add new properties, make guesses on loaded properties, and wait for results to come in on sold properties!</p>
+        <button className = "addButton" onClick={onAddClick}>+ Add New Item</button>
         <PropertyDisplay properties={zillowProperties}/>
         </>
     )
