@@ -7,7 +7,7 @@ import axios from 'axios';
 import config from './config.js';
 import dbSetup from './dbSetup.mjs'
 import GetQuery from './Get.mjs';
-import {Insert, Insert_UpdateScore, PostError} from './Post_Insert_Update.mjs';
+import {Insert, Insert_UpdateScore} from './Post_Insert_Update.mjs';
 import {GetZillowPrice} from './ZillowPrice.mjs';
 
 //ERROR CODES
