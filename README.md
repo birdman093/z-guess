@@ -2,12 +2,22 @@
 
 Website allows users to track and input house price estimates based on when a house is listed on Zillow and then compare that estimate against the final sale price, while tracking the results in the form of a “score” amongst users.
 
+
+
 ## Technologies
 ```
 FrontEnd: React.js
 BackEnd: Node.js
 DataBase: MySQL
 ```
+
+## Screen shots from 08/08/22 Final Presentation
+
+<img width="949" alt="Screen Shot 2022-10-13 at 10 43 40 PM" src="https://user-images.githubusercontent.com/71615880/195750537-fe3e5a64-3115-42fd-94f5-240a5b8ae2f0.png">
+
+<img width="967" alt="Screen Shot 2022-10-13 at 10 44 02 PM" src="https://user-images.githubusercontent.com/71615880/195750606-684f32e2-49f1-474c-ac68-8d546d2e51ed.png">
+
+![image](https://user-images.githubusercontent.com/71615880/195750638-caaafdd1-1d06-4286-8f54-7f7d234adfaf.png)
 
 ## MicroService Integration with Partner Spotify ML App
 
