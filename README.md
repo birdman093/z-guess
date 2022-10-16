@@ -6,7 +6,7 @@ Website allows users to track and input house price estimates based on when a ho
 
 ## Technologies
 ```
-FrontEnd: React.js
+FrontEnd: React.js, html, css
 BackEnd: Node.js
 DataBase: MySQL
 ```
