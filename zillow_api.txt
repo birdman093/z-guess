@@ -1,0 +1,30 @@
+GET/{dataset}/Property('{ListingKey}')
+
+DATA INPUTS:
+ListingKey:
+
+
+houseNumber:
+streetName:
+streetSuffix:
+unitNumber:
+unitPrefix:
+City:
+StateOrProvince: 
+PostalCode:
+ListPrice: 
+ClosePrice:
+zillowUrl:
+zestimate:
+Media:  [{MediaURL}]
+
+Zestimate
+
+OtherLogic:
+OnMarketDate:
+CloseDate:
+StatusChangeTimestamp:
+UnparsedAddress:  ????
+
+USER INPUTS:
+Name:

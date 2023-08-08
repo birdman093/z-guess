@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/static/css/main.c588dde7.css",
+    "main.js": "/static/js/main.c496e3b4.js",
+    "static/media/WinkyBeaverJPG.jpg": "/static/media/WinkyBeaverJPG.2337ed03cf34445b060c.jpg",
+    "index.html": "/index.html",
+    "main.c588dde7.css.map": "/static/css/main.c588dde7.css.map",
+    "main.c496e3b4.js.map": "/static/js/main.c496e3b4.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.c588dde7.css",
+    "static/js/main.c496e3b4.js"
+  ]
+}

@@ -1,0 +1,11 @@
+Run Locally:
+run local bash script
+
+Build to OSU Server Notes:
+Change ServerConstant.js to Deploy
+Build React App
+Upload to Github
+Download from Github to OSU Server
+Delete previous pm2 apps
+Deploy using bash deploy script
+
