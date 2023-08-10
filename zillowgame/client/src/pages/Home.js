@@ -22,7 +22,7 @@ function Home() {
             <br></br>
             <div>
                 <h3>About Z-Guess</h3>
-                <p className="about">
+                <p className='about'>
                     Z-Guess was created to learn React.js and the RapidAPI Zillow.com api while building a game for CS 362: Software Development
                     II at Oregon State University. For more check out <a href= "https://www.feathers-codes.com" target = "_blank">Feathers-Codes</a>
                 </p>
