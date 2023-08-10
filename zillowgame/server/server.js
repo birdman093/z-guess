@@ -1,4 +1,4 @@
-import {PORT} from '../ServerConfig.mjs';
+import {PORT} from '../client/src/config/ServerConfig.mjs';
 import routes from './routes/routes.js'
 import express from 'express';
 import cors from 'cors';
