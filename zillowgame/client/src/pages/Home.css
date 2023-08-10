@@ -1,0 +1,23 @@
+.home {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.howtoplay {
+  text-align: left;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.5;
+} 
+
+.about {
+  text-align: left;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.25;
+} 
+
+

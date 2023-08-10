@@ -6,6 +6,7 @@ import userObj from "../utility/UserProps.mjs";
 import {numFormat, priceFormat, guessFormat} from "../utility/InputFormat.mjs";
 import { UserLoggedIn, UpdateUserScore } from "../utility/UpdateUser.mjs";
 import {ValidateProperty, InvalidPostResponse} from "../utility/ValidateProperty.mjs";
+import './Properties.css';
 
 export function Properties() {
     useEffect(() => {
