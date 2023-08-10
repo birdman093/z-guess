@@ -5,9 +5,9 @@ import {
   Route
 } from "react-router-dom";
 import App from "./App";
-import AccountSetup from "./pages/AccountSetup";
-import DisplayProperties from "./pages/DisplayProperties";
-import GetPlaylist from "./pages/GetPlaylist";
+import AccountSetup from "./pages/account";
+import DisplayProperties from "./pages/properties";
+import GetPlaylist from "./pages/playlist";
 const rootElement = document.getElementById("root");
 
 // Routing for all pages.

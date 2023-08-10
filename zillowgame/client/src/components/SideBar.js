@@ -1,7 +1,6 @@
 import React from 'react';
 import { slide as Menu } from 'react-burger-menu';
-import beaver from './WinkyBeaverJPG.jpg';
-import ReactDOM from "react-dom";
+import beaver from '../assets/WinkyBeaverJPG.jpg';
 
 const props = () => {
   return (

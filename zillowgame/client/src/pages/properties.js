@@ -2,12 +2,12 @@ import React, {useEffect, useState} from "react";
 import Header from "../components/Header";
 import SideBar from "../components/SideBar";
 import {MdAdd, MdCancel} from "react-icons/md";
-import {AddressInUse} from '../../ServerConstant.js';
+import {AddressInUse} from '../config/ServerConfig.mjs';
 import ReactDOM from "react-dom";
-import userObj from "../frontend/UserProps.mjs";
-import {numFormat, priceFormat, guessFormat} from "../frontend/InputFormat.mjs";
-import { UserLoggedIn, UpdateUserScore } from "../frontend/UpdateUser.mjs";
-import {ValidateProperty, InvalidPostResponse} from "../frontend/ValidateProperty.mjs";
+import userObj from "../utility/UserProps.mjs";
+import {numFormat, priceFormat, guessFormat} from "../utility/InputFormat.mjs";
+import { UserLoggedIn, UpdateUserScore } from "../utility/UpdateUser.mjs";
+import {ValidateProperty, InvalidPostResponse} from "../utility/ValidateProperty.mjs";
 
 function DisplayProperties() {
     useEffect(() => {

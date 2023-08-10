@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from "react";
 import Header from "../components/Header";
 import SideBar from "../components/SideBar";
-import {AddressInUse,SpotifyAddress} from "../backend/ServerConstant.js";
-import userObj from "../frontend/UserProps.mjs";
-import { UserLoggedIn } from "../frontend/UpdateUser.mjs";
+import {AddressInUse, SpotifyAddress} from "../config/ServerConfig.mjs";
+import userObj from "../utility/UserProps.mjs";
+import { UserLoggedIn } from "../utility/UpdateUser.mjs";
 import ReactDOM from "react-dom";
-import { ValidateUserPlayListEntry, GetSongs } from "../frontend/ValidatePlaylist.mjs";
+import { ValidateUserPlayListEntry, GetSongs } from "../utility/ValidatePlaylist.mjs";
 
 function GetPlaylist() {
     

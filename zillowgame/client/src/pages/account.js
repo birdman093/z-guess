@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from "react";
 import Header from "../components/Header";
 import SideBar from "../components/SideBar";
-import {AddressInUse} from "../backend/ServerConstant.js";
-import userObj from "../frontend/UserProps.mjs";
+import {AddressInUse} from "../config/ServerConfig.mjs";
+import userObj from "../utility/UserProps.mjs";
 import ReactDOM from "react-dom";
-import { SetValidUserGreeting, UpdateUser } from "../frontend/UpdateUser.mjs";
+import { SetValidUserGreeting, UpdateUser } from "../utility/UpdateUser.mjs";
 
 function AccountSetup() {
     useEffect(() => {
