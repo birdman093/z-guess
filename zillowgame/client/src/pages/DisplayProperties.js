@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import Header from "../components/Header";
 import SideBar from "../components/SideBar";
 import {MdAdd, MdCancel} from "react-icons/md";
-import {AddressInUse} from "../backend/ServerConstant.js";
+import {AddressInUse} from '../../ServerConstant.js';
 import ReactDOM from "react-dom";
 import userObj from "../frontend/UserProps.mjs";
 import {numFormat, priceFormat, guessFormat} from "../frontend/InputFormat.mjs";

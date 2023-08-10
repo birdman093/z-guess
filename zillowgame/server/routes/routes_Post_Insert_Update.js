@@ -1,4 +1,4 @@
-import { CalcPropScore } from "./ZillowPrice.mjs";
+import { CalcPropScore } from "./ZillowPrice.js";
 
 // Generic Insert Query into SQL DB
 export function Insert(req, res, sql, inserts, connection) {

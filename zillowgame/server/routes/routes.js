@@ -1,14 +1,12 @@
+import {config} from '../config/config.js';
+import GetQuery from './Get.js';
+import {Insert, Insert_UpdateScore} from './routes_Post_Insert_Update.js';
+import {GetZillowPrice} from './ZillowPrice.js';
+
 import express, { response } from 'express';
-const PORT = 6363;
-import mysql from 'mysql';
-import cors from 'cors';
-import bodyParser from 'body-parser';
 import axios from 'axios';
-import config from './config.js';
-import dbSetup from './dbSetup.mjs'
-import GetQuery from './Get.mjs';
-import {Insert, Insert_UpdateScore} from './Post_Insert_Update.mjs';
-import {GetZillowPrice} from './ZillowPrice.mjs';
+
+const routes = express.Router();
 
 //ERROR CODES
 //404 -- PAGE NOT FOUND -- DB NOT WORKING DURING SELECTION
@@ -19,15 +17,8 @@ import {GetZillowPrice} from './ZillowPrice.mjs';
 //415 -- ZILLOW API FAILURE
 //425 -- PUT ERROR -- NO update has been made
 
-//Connect DB and API setup
-var connection = dbSetup();
-const app = express();
-app.use(cors());
-app.use(bodyParser.urlencoded({ extended: false }))
-app.use(bodyParser.json())
-
 //  Account Login: LazyMan's Password Validation. Validates userName and Password against DB
-app.post('/GET/user', function(req, res)
+routes.post('/GET/user', function(req, res)
 {
     var sql = `SELECT UserName, FirstName, LastName, Score FROM Logins WHERE UserName = ? AND Password = ?`;
     var inserts = [req.body.userName, req.body.password]
@@ -35,7 +26,7 @@ app.post('/GET/user', function(req, res)
 });
 
 //  Get Score for an individual user
-app.post('/GET/user/score', function(req, res)
+routes.post('/GET/user/score', function(req, res)
 {
     var sql = `SELECT Score FROM Logins WHERE UserName = ?`;
     var inserts = [req.body.userName]
@@ -43,7 +34,7 @@ app.post('/GET/user/score', function(req, res)
 });
 
 // Random User Property Link MicroService:  Used by Spotify Microservice
-app.get('/GET/spotifyproperties/:userName', function(req, res)
+routes.get('/GET/spotifyproperties/:userName', function(req, res)
 {
     //Send link to spotify playlist microservice
     var qString = `SELECT Properties.Url, Properties.Image FROM Logins LEFT JOIN LoginsToProperties ON Logins.UserName = ` +
@@ -65,7 +56,7 @@ app.get('/GET/spotifyproperties/:userName', function(req, res)
 });
 
 // Returns all properties in db for user
-app.get('/GET/properties/:userName', function(req, res)
+routes.get('/GET/properties/:userName', function(req, res)
 {
     var qString = `SELECT * FROM Logins LEFT JOIN LoginsToProperties ON Logins.UserName = ` +
     `LoginsToProperties.UserName LEFT JOIN Properties ON LoginsToProperties.PropertyID = ` +
@@ -82,7 +73,7 @@ app.get('/GET/properties/:userName', function(req, res)
 });
 
 // Add new property to DB
-app.post('/POST/properties', function(req, res)
+routes.post('/POST/properties', function(req, res)
 {
     // RAPID API options set to search for input property URL (partially validated on front end)
     const options = config.rapidAPI
@@ -117,19 +108,9 @@ app.post('/POST/properties', function(req, res)
     });
 });
 
-app.post('/POST/guess', function(req, res)
+routes.post('/POST/guess', function(req, res)
 {
     Insert_UpdateScore(req, res, connection);
 });
 
-// For Internal Testing Only
-app.post('/playlistgenerator', function(req, res)
-{
-    var NumSongsSent = req.body.tracks.length;
-    res.json({link:NumSongsSent});
-    res.end()   
-});
-
-app.listen(PORT, () => {
-    console.log("Express started on http://localhost:"+PORT+"; press Ctrl-C to terminate.");
-});
+export default routes;

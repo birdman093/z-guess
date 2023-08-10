@@ -1,7 +1,9 @@
 import mysql from 'mysql';
-import config from './config.js';
+import {config} from '../config/config.js';
 
-export default function dbSetup() {
+function dbSetup() {
+    return null;
+    //TODO: Set up new database
     var connection = mysql.createConnection(config.db);
 
     connection.connect(function(err) {
@@ -14,3 +16,7 @@ export default function dbSetup() {
     });
     return connection
 }
+
+const dbConnection = dbSetup();
+
+export default dbConnection;
