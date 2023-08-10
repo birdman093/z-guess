@@ -1,28 +1,6 @@
-import { render } from "react-dom";
-import {
-  BrowserRouter,
-  Routes,
-  Route
-} from "react-router-dom";
-import App from "./App";
-import AccountSetup from "./pages/account";
-import DisplayProperties from "./pages/properties";
-import GetPlaylist from "./pages/playlist";
-const rootElement = document.getElementById("root");
+import React from 'react';
+import ReactDOM from 'react-dom';
+import './index.css';
+import App from './App';
 
-// Routing for all pages.
-render(
-  <BrowserRouter>
-    <Routes>
-      <Route path="/" element={<App />} />
-      <Route path="AccountPage" element={<AccountSetup/>} />
-      <Route path="GetPlaylist" element={<GetPlaylist/>} />
-      <Route path="DisplayProperties" element={<DisplayProperties/>} />
-    </Routes>
-  </BrowserRouter>,
-  rootElement
-);
-
-
-
-
+const root = ReactDOM.render(<App />, document.getElementById('root'));

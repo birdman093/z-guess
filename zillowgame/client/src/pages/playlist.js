@@ -1,13 +1,11 @@
 import React, {useEffect, useState} from "react";
-import Header from "../components/Header";
-import SideBar from "../components/SideBar";
 import {AddressInUse, SpotifyAddress} from "../config/ServerConfig.mjs";
 import userObj from "../utility/UserProps.mjs";
 import { UserLoggedIn } from "../utility/UpdateUser.mjs";
 import ReactDOM from "react-dom";
 import { ValidateUserPlayListEntry, GetSongs } from "../utility/ValidatePlaylist.mjs";
 
-function GetPlaylist() {
+function Playlist() {
     
     //Makes request to spotify microservice and returns link to a playlist based off the song urls
     const GetSpotifyPlaylist = async () => {
@@ -35,9 +33,7 @@ function GetPlaylist() {
 
     // Base Page Template
     return(
-        <>
-        <Header/>
-        <SideBar />
+        <div>
         <h1>PlayList Generator</h1>
         <p>Get a ML generated Playlist to Listen to as you Look at Zillow Properties!</p>
         <label>Playlist Name:</label>
@@ -62,8 +58,8 @@ function GetPlaylist() {
         <br></br>
         <button className = "newPropAdd" onClick = {GetSpotifyPlaylist}>GetSpotifyPlaylist</button>
         <p id = "playList">{userObj.url}</p>
-        </>
+        </div>
     )
 }
 
-export default GetPlaylist;
+export default Playlist;

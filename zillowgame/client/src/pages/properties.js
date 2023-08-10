@@ -1,6 +1,4 @@
 import React, {useEffect, useState} from "react";
-import Header from "../components/Header";
-import SideBar from "../components/SideBar";
 import {MdAdd, MdCancel} from "react-icons/md";
 import {AddressInUse} from '../config/ServerConfig.mjs';
 import ReactDOM from "react-dom";
@@ -9,7 +7,7 @@ import {numFormat, priceFormat, guessFormat} from "../utility/InputFormat.mjs";
 import { UserLoggedIn, UpdateUserScore } from "../utility/UpdateUser.mjs";
 import {ValidateProperty, InvalidPostResponse} from "../utility/ValidateProperty.mjs";
 
-function DisplayProperties() {
+export function Properties() {
     useEffect(() => {
         loadProperties();
         loadScore();
@@ -207,16 +205,14 @@ function DisplayProperties() {
 
     // Base Page Template
     return(
-        <>
-        <Header/>
-        <SideBar />
+        <div>
         <h1>User Property History</h1>
         <p className = "addButton" id = "userScore">{userObj.firstName + " " + userObj.lastName + " Score: " + userScore}</p>
         <p>Add new properties, make guesses on loaded properties, and wait for results to come in on sold properties!</p>
         <button className = "addButton" onClick={onAddClick}>+ Add New Item</button>
         <PropertyDisplay properties={zillowProperties}/>
-        </>
+        </div>
     )
 }
 
-export default DisplayProperties;
+export default Properties;

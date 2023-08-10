@@ -11,3 +11,24 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+:root {
+  --dark-mode-bg: rgb(26, 33, 44);
+  --light-mode-bg: white;
+  --dark-mode-header: rgb(52,53,65);
+  --light-mode-header: #dfe0e1;
+  --dark-mode-text: white;
+  --light-mode-text: black;
+  --dark-mode-gh-icon: /github-mark-white.png;
+  --light-mode-gh-icon: /github-mark-dark.png;
+
+  --header-bg-color: var(--dark-mode-header);
+  --bg-color: var(--dark-mode-bg);
+  --text-color: var(--dark-mode-text);
+  --github-icon: var(--dark-mode-gh-icon);
+}
