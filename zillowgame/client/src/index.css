@@ -15,6 +15,9 @@ code {
 body {
   background-color: var(--bg-color);
   color: var(--text-color);
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
 
 :root {

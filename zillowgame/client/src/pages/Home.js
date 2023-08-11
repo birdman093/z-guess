@@ -2,7 +2,7 @@ import './Home.css';
 
 function Home() {
     return(
-        <div className="home">
+        <div>
             <h1>Welcome To Z-Guess!</h1>
             <h2>Where users can try to beat the Zestimate®</h2>
             <br></br>
@@ -23,8 +23,8 @@ function Home() {
             <div>
                 <h3>About Z-Guess</h3>
                 <p className='about'>
-                    Z-Guess was created to learn React.js and the RapidAPI Zillow.com api while building a game for CS 362: Software Development
-                    II at Oregon State University. For more check out <a href= "https://www.feathers-codes.com" target = "_blank">Feathers-Codes</a>
+                    Z-Guess was created to learn React.js and the RapidAPI Zillow.com api while building a project for CS 362: Software Development
+                    II at Oregon State University. For more info about the author check out <a href= "https://www.feathers-codes.com" target = "_blank">Feathers-Codes</a>
                 </p>
             </div>
         </div>
