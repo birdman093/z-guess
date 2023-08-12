@@ -1,10 +1,11 @@
 import { CalcPropScore } from "./zillowPrice.js";
+import errorMessage from './error.js';
 
 // Generic Insert Query into SQL DB
 export function Insert(req, res, sql, inserts, connection) {
     connection.query(sql,inserts,function(error, results, fields){
         if(error){
-            SQLError(error, res, 407)
+            SQLError(error, res)
         }else{
             res.status(201);
             res.end();
@@ -19,7 +20,7 @@ export function Insert_UpdateScore(req, res, connection) {
 
     connection.query(sql,inserts,function(error, results, fields){
         if(error){
-            SQLError(error, res, 407);
+            SQLError(error, res);
         }else{
             if (req.body.sellPrice !== null){
                 var newScore = req.body.score + CalcPropScore(req.body.sellPrice, req.body.guess);
@@ -34,13 +35,14 @@ export function Insert_UpdateScore(req, res, connection) {
     });
 }
 
-export function SQLError(error, res, code){
+export function SQLError(error, res){
+    res.status(400);
     if (error.code === "ER_DUP_ENTRY") {
-        res.status(410);
+        res.write(errorMessage("Duplicate"));
     } else {
-        res.status(code);
+        res.write(errorMessage("DB-Post"));
     }
-    res.write(JSON.stringify(error));
+    
     res.end();
 }
 
@@ -48,7 +50,7 @@ export function SQLError(error, res, code){
 function Update(req, res, sql, inserts, connection){
     connection.query(sql,inserts,function(error, results, fields){
         if(error){
-            SQLError(error, res, 406)
+            SQLError(error, res)
         }else{
             res.status(201);
             res.end();

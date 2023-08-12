@@ -1,14 +1,13 @@
-# Beat the Zestimate!
+# Z-Guess: Beat the Zestimate!
 
-Website allows users to track and input house price estimates based on when a house is listed on Zillow and then compare that estimate against the final sale price, while tracking the results in the form of a “score” amongst users.
-
-
+Z-Guess tracks user house sell-price estimates for house listings on Zillow and generates a score based on "closeness" to the final sale price. Z-Guess utilizes the RapidAPI Zillow.com API, and stores data in a PostgreSQL database. Created as part of Software Development I at Oregon State University.
 
 ## Technologies
 ```
-FrontEnd: React.js, html, css
+FrontEnd: React.js, HTML/CSS
 BackEnd: Node.js
-DataBase: MySQL
+DataBase: PostgresSQL (switched from MySQL)
+Cloud: Railway (Postgres)
 ```
 
 ## Screen shots from 08/08/22 Final Presentation

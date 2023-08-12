@@ -1,6 +1,6 @@
 import {config} from '../config/config.js';
 import GetQuery from './utility/get.js';
-import {Insert, Insert_UpdateScore} from './utility/routesPostInsertUpdate.js';
+import {Insert, Insert_UpdateScore} from './utility/post.js';
 import {GetZillowPrice} from './utility/zillowPrice.js';
 import connection from '../middlewares/dbSetup.js';
 
@@ -9,7 +9,7 @@ import axios from 'axios';
 
 const userRoutes = express.Router();
 
-//  Account Login: LazyMan's Password Validation. Validates userName and Password against DB
+//  User Account Login -- LazyMan Password Validation against DB Table
 userRoutes.post('/user', function(req, res)
 {
     var sql = `SELECT UserName, FirstName, LastName, Score FROM Accounts 
@@ -18,15 +18,16 @@ userRoutes.post('/user', function(req, res)
     GetQuery(connection, sql, inserts, req, res);                                            
 });
 
-//  Get Score for an individual user
+//  User Score (No Password needed currently)
 userRoutes.post('/user/score', function(req, res)
 {
-    var sql = `SELECT Score FROM Accounts WHERE UserName = ?`;
+    var sql = `SELECT Score FROM Accounts WHERE UserName = $1`;
     var inserts = [req.body.userName]
     GetQuery(connection, sql, inserts, req, res);                                            
 });
 
-userRoutes.post('/guess', function(req, res)
+// User Guess for property
+userRoutes.post('/user/guess', function(req, res)
 {
     Insert_UpdateScore(req, res, connection);
 });
