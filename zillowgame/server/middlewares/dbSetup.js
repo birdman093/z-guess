@@ -1,10 +1,28 @@
-import mysql from 'mysql';
 import {config} from '../config/config.js';
+import pkg from 'pg';
+
+const {Pool} = pkg;
 
 function dbSetup() {
-    return null;
-    //TODO: Set up new database
-    var connection = mysql.createConnection(config.db);
+    const pool = new Pool({
+        connectionString: config.db.connectionString,
+        ssl: {
+            rejectUnauthorized: false
+        }
+    });
+
+    pool.query('SELECT NOW()', (err, res) => {
+        if (err) {
+            console.error('Error connecting:', err.stack);
+        } else {
+            console.log('Connected to Postgres, server time:', res.rows[0].now);
+        }
+    });
+
+    return pool;
+
+    /*
+    var connection = mysql.createConnection(config.db.connectionString);
 
     connection.connect(function(err) {
         if (err) {
@@ -15,8 +33,9 @@ function dbSetup() {
         }
     });
     return connection
+    */
 }
 
-const dbConnection = dbSetup();
+const connection = dbSetup();
 
-export default dbConnection;
+export default connection;
