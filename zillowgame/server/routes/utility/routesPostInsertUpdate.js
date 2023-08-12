@@ -1,4 +1,4 @@
-import { CalcPropScore } from "./ZillowPrice.js";
+import { CalcPropScore } from "./zillowPrice.js";
 
 // Generic Insert Query into SQL DB
 export function Insert(req, res, sql, inserts, connection) {
@@ -14,7 +14,7 @@ export function Insert(req, res, sql, inserts, connection) {
 
 //Insert Guess into DB and then Update Score Query
 export function Insert_UpdateScore(req, res, connection) {
-    var sql = "UPDATE LoginsToProperties SET Guess = ? WHERE UserName = ? AND PropertyID = ?" 
+    var sql = "UPDATE AccountsToProperties SET Guess = ? WHERE UserName = ? AND PropertyID = ?" 
     var inserts = [req.body.guess, req.body.userName, req.body.propertyID, ];
 
     connection.query(sql,inserts,function(error, results, fields){
@@ -24,7 +24,7 @@ export function Insert_UpdateScore(req, res, connection) {
             if (req.body.sellPrice !== null){
                 var newScore = req.body.score + CalcPropScore(req.body.sellPrice, req.body.guess);
                 var inserts2 = [newScore, req.body.userName];
-                var sql2 = "UPDATE Logins SET Score = ? WHERE UserName = ?";
+                var sql2 = "UPDATE Accounts SET Score = ? WHERE UserName = ?";
                 Update(req, res, sql2, inserts2, connection)
             } else {
                 res.status(201);
