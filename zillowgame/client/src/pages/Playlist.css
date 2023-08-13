@@ -1,0 +1,60 @@
+.playlist-container {
+    width: 80%;
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: var(--header-bg-color);
+}
+
+h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+p {
+    margin-bottom: 20px;
+}
+
+.input-field {
+    width: 100%;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin: 5px 0;
+    outline: none;
+    font-size: 14px;
+    width: 80%;
+}
+
+.songs-input-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.song-input {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+label {
+    font-size: 16px;
+    margin-right: 10px;
+}
+
+.generate-button {
+    padding: 10px 15px;
+    background-color: var(--box-color);
+    color: var(--header-bg-color);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 10px;
+}
+
+.generate-button:hover {
+    background-color: #2196F3;
+}

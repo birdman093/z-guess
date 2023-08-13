@@ -205,7 +205,6 @@ export function Properties() {
         <div>
         <h1>Property History</h1>
         <h3 id = "userScore">{userObj.firstName + " " + userObj.lastName + " - Score: " + userObj.score}</h3>
-        <p>Add properties, make guesses, and wait for the results!</p>
         <div className = "container">
         <button className = "addButton" onClick={onAddClick}>+ Add New Property</button>
         <PropertyDisplay properties={zillowProperties}/>

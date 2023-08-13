@@ -1,17 +1,19 @@
 .howtoplay {
   text-align: left;
-  max-width: 500px;
+  max-width: 600px;
   margin-left: auto;
   margin-right: auto;
   line-height: 1.5;
+  font-size: 18px;
 } 
 
 .about {
   text-align: left;
-  max-width: 500px;
+  max-width: 600px;
   margin-left: auto;
   margin-right: auto;
-  line-height: 1.25;
+  line-height: 1.5;
+  font-size: 18px;
 } 
 
 

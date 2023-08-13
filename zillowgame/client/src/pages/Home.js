@@ -19,7 +19,6 @@ function Home() {
                     <li>Bonus: Create a spotify playlist by inserting 5 spotify links to keep you entertained!</li>
                 </ol>
             </div>
-            <br></br>
             <div>
                 <h3>About Z-Guess</h3>
                 <p className='about'>

@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from "react";
 import {AddressInUse} from "../config/ServerConfig.mjs";
 import userObj from "../utility/UserProps.mjs";
-import ReactDOM from "react-dom";
 import { SetValidUserGreeting, UpdateUser } from "../utility/UpdateUser.mjs";
+import './Account.css';
 
 function Account() {
     useEffect(() => {
@@ -42,12 +42,15 @@ function Account() {
     return(
         <div>
         <h1>Account Login</h1>
-        <p>Login To Your Account Here!  Contact the DB Admin if your login does not work!</p>
-        <label>UserName: </label>
-        <input className = "accountAdd" id ="userNameInp"></input>
-        <label>Password: </label>
-        <input className = "accountAdd" type = "password" id = "passwordInp"></input>
-        <button onClick = {VerifyPassword}>Verify</button>
+        <div className = "AccountContainer">
+            <label>UserName: </label>
+            <input className = "accountAdd" id ="userNameInp"></input>
+            <br></br>
+            <label>Password: </label>
+            <input className = "accountAdd" type = "password" id = "passwordInp"></input>
+            <br></br>
+            <button onClick = {VerifyPassword}>Verify</button>
+        </div>
         <p id = "Greeting"></p>
         </div>
     )
