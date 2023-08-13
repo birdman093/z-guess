@@ -1,6 +1,6 @@
 import {PORT} from '../client/src/config/ServerConfig.mjs';
 import propertiesRoutes from './routes/properties.js'
-import userRoutes from './routes/users.js'
+import userRoutes from './routes/user.js'
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
