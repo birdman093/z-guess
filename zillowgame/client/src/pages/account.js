@@ -22,7 +22,7 @@ function Account() {
             return
         }
      
-        const response = await fetch(`${AddressInUse}/GET/user`, {
+        const response = await fetch(`${AddressInUse}/user`, {
             method: 'POST',
             body: JSON.stringify(userLogin),
             headers: {

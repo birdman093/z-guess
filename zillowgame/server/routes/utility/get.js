@@ -15,7 +15,7 @@ export function userExists(connection, inserts) {
         var sql = `
         SELECT EXISTS(
             SELECT 1 FROM Accounts
-            WHERE UserName = $1 AND Password = $2
+            WHERE UserName = $1
         ) AS user_exists;`;
 
         connection.query(sql, inserts, (error, results, fields) => {

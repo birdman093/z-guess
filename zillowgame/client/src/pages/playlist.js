@@ -18,6 +18,10 @@ function Playlist() {
         const tracks = GetSongs();
      
         const songPass ={title, tracks}
+
+        alert("Playlist Server Down -- Check Back Later");
+        return;
+        /*
         const response = await fetch(`${SpotifyAddress}/playlistgenerator`, {
             method: 'POST',
             body: JSON.stringify(songPass),
@@ -29,6 +33,7 @@ function Playlist() {
 
         userObj.url = resValue.link;
         document.getElementById("playList").innerHTML = userObj.url;
+        */
     }
 
     // Base Page Template

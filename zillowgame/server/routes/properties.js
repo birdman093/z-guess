@@ -81,14 +81,13 @@ propertiesRoutes.get('/properties/random/:userName', function(req, res)
 propertiesRoutes.post('/properties', async function(req, res)
 {
     // lazy user validation
-    if (!req.body.hasOwnProperty('userName') || 
-        !req.body.hasOwnProperty('password')) 
+    if (!req.body.hasOwnProperty('userName')) 
     {
         res.status(403).send(errorMessage("NoAccount"));
         return;
     }
 
-    const exists = await userExists(connection, [req.body.userName, req.body.password]);
+    const exists = await userExists(connection, [req.body.userName]);
 
     if (!exists) {
         res.status(403).send(errorMessage("NoAccount"));

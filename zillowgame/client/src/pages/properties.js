@@ -22,8 +22,9 @@ export function Properties() {
     const loadProperties = async () => {
         if (!UserLoggedIn()) {return;}
 
-        const response = await fetch(`${AddressInUse}/GET/properties/${userObj.userName}`);
+        const response = await fetch(`${AddressInUse}/properties/${userObj.userName}`);
         const zillowProperties = await response.json();
+        console.log(zillowProperties);
         setZillowProperties(zillowProperties);
     }
 
@@ -33,23 +34,14 @@ export function Properties() {
 
         let userName = userObj.userName;
         const userLogin = {userName};
-        const response = await fetch(`${AddressInUse}/GET/user/score`, {
-            method: 'POST',
-            body: JSON.stringify(userLogin),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-
+        const response = await fetch(`${AddressInUse}/user/score/${userObj.userName}`);
         const resValue = await response.json();
-        console.log(resValue);
-        console.log(resValue[0].Score);
         UpdateUserScore(resValue[0].Score);
         const userScore = resValue[0].Score;
         setUserScore(userScore);
     }
 
-    // Add new Property to DB and update Displayed Properties
+    // Add Property
     const addZillowLink = async() => {
 
         if (!UserLoggedIn()) {return;}
@@ -60,7 +52,7 @@ export function Properties() {
 
         let userName = userObj.userName;
 
-        const response = await fetch(`${AddressInUse}/POST/properties`, {
+        const response = await fetch(`${AddressInUse}/properties`, {
             method: 'POST',
             body: JSON.stringify({name,url,userName}),
             headers: {
@@ -79,13 +71,13 @@ export function Properties() {
 
     // add new property to be displayed
     const addGuess = async(property) => {
-        let propertyID = property.PropertyID; let sellPrice = property.SellPrice;
+        let propertyID = property.propertyid; let sellPrice = property.sellprice;
         let guess = document.getElementById("guessInp"+propertyID).value;
         let userName = userObj.userName; let score = userObj.score;
         
         const newGuess = {propertyID, sellPrice, score, userName, guess};
      
-        const response = await fetch(`${AddressInUse}/POST/guess`, {
+        const response = await fetch(`${AddressInUse}/user/guess`, {
             method: 'POST',
             body: JSON.stringify(newGuess),
             headers: {
@@ -112,15 +104,15 @@ export function Properties() {
     };
 
     const GuessInputDisplay = (property) => {
-        if (property.SellPrice === null || property.Guess === null){
-            return <input id = {"guessInp"+property.PropertyID} onKeyUp={(id) => numFormat(id)} placeholder="enter guess!"/>
+        if (property.sellprice === null || property.guess === null){
+            return <input id = {"guessInp"+property.propertyid} onKeyUp={(id) => numFormat(id)} placeholder="enter guess!"/>
         } else {
             return
         }
     }
 
     const GuessInputAddDisplay = (property) => {
-        if (property.SellPrice === null || property.Guess === null){
+        if (property.sellprice === null || property.guess === null){
             return <MdAdd onClick={() => AddGuessInput(property)}/>
         } else {
             return
@@ -137,7 +129,7 @@ export function Properties() {
     };
 
     const AddGuessInput = async(property) => {
-        let guess = document.getElementById("guessInp"+property.PropertyID).value
+        let guess = document.getElementById("guessInp"+property.propertyid).value;
         if (guess.length > 3 && guess.length < 10){
             addGuess(property);
         } else if (guess.length < 4) {
@@ -160,9 +152,6 @@ export function Properties() {
                             <td width = "75px" className = "propHeader">PropertyID</td>
                             <td width = "200px" className = "propHeader">Name</td>
                             <td width = "250px" className = "propHeader">URL</td>
-                            <td width = "200px" className = "propHeader">StreetAddress</td>
-                            <td width = "100px" className = "propHeader">City</td>
-                            <td width = "35px" className = "propHeader">State</td>
                             <td width = "50px" className = "propHeader">ZipCode</td>
                             <td width = "75px" className = "propHeader">ListPrice</td>
                             <td width = "75px" className = "propHeader">Zestimate</td>
@@ -184,20 +173,17 @@ export function Properties() {
     // Mapping Function
     function PropertyMap({property}) {
         return (
-            <tr id={property.PropertyID}>
-                <td>{property.PropertyID}</td>
-                <td>{property.Name}</td>
+            <tr id={property.propertyid}>
+                <td>{property.propertyid}</td>
+                <td>{property.name}</td>
                 <td>
-                    <a href = {property.Url}>{property.StreetAddress + " " + property.City + ", " + property.State}</a>
+                    <a href = {property.url}>{property.streetaddress + " " + property.city + ", " + property.state}</a>
                 </td>
-                <td>{property.StreetAddress}</td>
-                <td>{property.City}</td>
-                <td>{property.State}</td>
-                <td>{property.ZipCode}</td>
-                <td>{priceFormat(property.ListPrice)}</td>
-                <td>{priceFormat(property.Zestimate)}</td>
-                <td>{guessFormat(property.Guess,property.SellPrice)}</td>
-                <td>{priceFormat(property.Guess)}</td>
+                <td>{property.zipcode}</td>
+                <td>{priceFormat(property.listprice)}</td>
+                <td>{priceFormat(property.zestimate)}</td>
+                <td>{guessFormat(property.guess,property.sellprice)}</td>
+                <td>{priceFormat(property.guess)}</td>
                 <td>{GuessInputDisplay(property)}</td>
                 <td>{GuessInputAddDisplay(property)}</td>
             </tr>

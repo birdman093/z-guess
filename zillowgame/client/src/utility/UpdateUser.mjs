@@ -17,11 +17,11 @@ export function SetValidUserGreeting(valid, first = false){
 
 // Updates User Properties based on input data
 export function UpdateUser(resValue){
-    if (resValue.length > 0){
-        userObj.userName = resValue[0].UserName;
-        userObj.firstName = resValue[0].FirstName;
-        userObj.lastName = resValue[0].LastName;
-        userObj.score = resValue[0].Score;
+    if (resValue.length == 1){
+        userObj.userName = resValue[0].username;
+        userObj.firstName = resValue[0].firstname;
+        userObj.lastName = resValue[0].lastname;
+        userObj.score = resValue[0].score;
         SetValidUserGreeting(true);
     } else {
         userObj.userName = "";
