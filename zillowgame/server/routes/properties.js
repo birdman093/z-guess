@@ -126,7 +126,7 @@ propertiesRoutes.post('/properties', async function(req, res)
                 console.log("next-round");
                 var sql2 = `INSERT INTO AccountsToProperties(UserName, PropertyID, Name, Description, Guess) 
                 VALUES ($1, $2, $3, $4, $5)`;
-                var inserts2 = [req.body.userName, String(response.data.zpid), null, null, null];
+                var inserts2 = [req.body.userName, String(response.data.zpid), req.body.name, null, null];
                 insert(req, res, sql2, inserts2, connection);
             }
         });

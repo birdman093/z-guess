@@ -1,19 +1,7 @@
-input.newPropAdd{
-  font-size: 12px;
-  width: 500px;
-  margin: 5px 20px 5px 20px;
-
-}
-
 input.accountAdd{
   font-size: 12px;
   width: 150px;
   margin: 5px 20px 5px 20px;
-
-}
-
-button.addButton{
-  margin: 10px 5px 10px 5px;
 }
 
 input{

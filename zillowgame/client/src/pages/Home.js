@@ -23,8 +23,8 @@ function Home() {
             <div>
                 <h3>About Z-Guess</h3>
                 <p className='about'>
-                    Z-Guess was created to learn React.js and the RapidAPI Zillow.com api while building a project for CS 362: Software Development
-                    I at Oregon State University. For more info about the author check out <a href= "https://www.feathers-codes.com" target = "_blank">Feathers-Codes</a>
+                    Z-Guess was created to learn React.js and RapidAPI Zillow.com API while building a project for CS 361: Software Development
+                    I at Oregon State University. For more info about the author check out <a href= "https://www.feathers-codes.com" target = "_blank" rel="noreferrer">Feathers-Codes</a>
                 </p>
             </div>
         </div>

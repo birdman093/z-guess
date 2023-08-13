@@ -25,6 +25,8 @@ body {
   --light-mode-bg: white;
   --dark-mode-header: rgb(52,53,65);
   --light-mode-header: #dfe0e1;
+  --dark-mode-box: var(--light-mode-header);
+  --light-mode-box: var(--dark-mode-header);
   --dark-mode-text: white;
   --light-mode-text: black;
   --dark-mode-gh-icon: /github-mark-white.png;
@@ -32,6 +34,7 @@ body {
 
   --header-bg-color: var(--dark-mode-header);
   --bg-color: var(--dark-mode-bg);
+  --box-color: var(--dark-mode-box);
   --text-color: var(--dark-mode-text);
   --github-icon: var(--dark-mode-gh-icon);
 }

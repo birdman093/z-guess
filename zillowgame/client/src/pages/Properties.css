@@ -1,26 +1,117 @@
-tr:nth-child(even){background-color: #f2f2f2;}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: Arial, sans-serif;  /* Set a modern font */
+  border: 1px solid var(--bg-color);  /* Softer border color */
+}
 
-tr:hover {background-color: lightsalmon};
+td, th {
+  border: 1px solid var(--box-color);  /* Softer border color */
+  padding: 12px 15px;          /* Slightly more horizontal padding */
+  font-size: 15px;            /* Slightly bigger font size */
+}
 
 th {
-  padding-top: 12px;
-  padding-bottom: 12px;
-  text-align: left;
-  background-color: lightsalmon;
-  color: black;
+  background-color: var(--header-bg-color);  /* Assuming you've set this variable somewhere */
+  font-weight: 600;  /* Make header fonts bold */
+  text-transform: uppercase; /* Optional: Make the headers uppercase */
 }
 
-table {
-    margin: 0px auto;
-  }
-  
-td, th {
-border: 1px solid #ddd;
-padding: 4px;
-font-size: 14px;
+tr:hover {
+  background-color: #FF7B58;
+}
+.guessIcon {
+  background-color: var(--box-color);
+  color: var(--bg-color);
+  margin-left: 10px;
+  border-radius: 50%; 
+  padding: 2px;
+  align-items: center;
+  vertical-align: center;
 }
 
-td.propHeader{
-font-size: 16px;
-background-color: lightgray;
+.guessIcon:hover {
+  transform: scale(1.2);
+}
+
+.guessIcon:active {
+  transform: scale(0.90);
+}
+
+.guessInput {
+  padding: 3px;
+  align-items: center;
+  vertical-align: center;
+}
+
+.guessContainer {
+  display:flex;
+  align-items: center;
+}
+
+.newPropIcon {
+  background-color: var(--bg-color); /* Background color */
+  border-radius: 50%;        /* Rounded corners */
+  padding: 10px;             /* Space inside the button */
+  margin-right: 30px;        
+  margin-left: 30px;
+  transition: background-color 0.3s, transform 0.3s;
+  cursor: pointer;
+}
+
+.newPropIcon:hover {
+  background-color: #e0e0e0;
+  transform: scale(1.1);
+}
+
+.PropertyAddBox {
+  background-color: var(--header-bg-color);
+  padding: 20px;
+  border-radius: 20px;
+  margin-top: 0px;
+  margin-bottom: 30px;
+  padding-top: 20px;
+  padding-bottom: 10px;
+  width: 70%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.PropertyInput {
+  margin-bottom: "10px";
+  border-radius: '5px'; 
+  padding: '10px';
+  width: '80%';
+  border-bottom: '2px solid #ccc';
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: auto;
+  align-items: center;
+  max-width: 1200px;
+}
+
+.addButton {
+  background-color: var(--box-color);
+  color: var(--bg-color);
+  margin-bottom: 20px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 25px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  font-family: 'Arial', sans-serif;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.addButton:hover {
+  transform: scale(1.04);
+}
+
+.addButton:active {
+  transform: scale(0.96);
 }

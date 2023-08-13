@@ -24,7 +24,6 @@ export function Properties() {
 
         const response = await fetch(`${AddressInUse}/properties/${userObj.userName}`);
         const zillowProperties = await response.json();
-        console.log(zillowProperties);
         setZillowProperties(zillowProperties);
     }
 
@@ -32,12 +31,10 @@ export function Properties() {
     const loadScore = async () => {
         if (!UserLoggedIn()) {return;}
 
-        let userName = userObj.userName;
-        const userLogin = {userName};
         const response = await fetch(`${AddressInUse}/user/score/${userObj.userName}`);
         const resValue = await response.json();
-        UpdateUserScore(resValue[0].Score);
-        const userScore = resValue[0].Score;
+        UpdateUserScore(resValue[0].score);
+        const userScore = resValue[0].score;
         setUserScore(userScore);
     }
 
@@ -69,10 +66,10 @@ export function Properties() {
         }
     }
 
-    // add new property to be displayed
+    // add guess
     const addGuess = async(property) => {
         let propertyID = property.propertyid; let sellPrice = property.sellprice;
-        let guess = document.getElementById("guessInp"+propertyID).value;
+        let guess = document.getElementById("guessInput-"+propertyID).value;
         let userName = userObj.userName; let score = userObj.score;
         
         const newGuess = {propertyID, sellPrice, score, userName, guess};
@@ -93,19 +90,37 @@ export function Properties() {
         }
     }
 
-    // UI Input for Properties
+    // Add Properties
     const PropertyLinkInput = () => {
-        return <div>
-                    <input className = "newPropAdd" id="nameInp" placeholder="Property Description i.e Snake House"/>
-                    <input className = "newPropAdd" id="urlInp" placeholder="Zillow URL link i.e. https://www.zillow.com/homedetails/123-Generic-Ave-City-State-07080/40084001_zpid/"/>
-                    <MdAdd className = "newPropAdd" onClick = {addZillowLink}/>
-                    <MdCancel className = "newPropAdd" onClick = {removeAddClick}/>
-                </div>
+        return <div className = "PropertyAddBox">
+        <div className = "propertyInput">
+            <input
+                className="newPropAdd"
+                id="nameInp"
+                placeholder="Property Description e.g. Snake House"
+                
+            />
+        </div>
+        <div className = "propertyInput">
+            <input
+                id="urlInp"
+                placeholder="Zillow URL e.g. https://www.zillow.com/homedetails/48-Winding-Ln-Feasterville-PA-19053/9025882_zpid/"
+            />
+        </div>
+        <div>
+            <MdAdd className="newPropIcon" onClick={addZillowLink} title="Add Property" />
+            <MdCancel className="newPropIcon" onClick={removeAddClick} title="Cancel" />
+        </div>
+    </div>
+    
     };
 
     const GuessInputDisplay = (property) => {
         if (property.sellprice === null || property.guess === null){
-            return <input id = {"guessInp"+property.propertyid} onKeyUp={(id) => numFormat(id)} placeholder="enter guess!"/>
+            return <input
+            className = "guessInput" 
+            id = {"guessInput-"+property.propertyid} onKeyUp={(id) => numFormat(id)} 
+            placeholder="$x,xxx,xxx!"/>
         } else {
             return
         }
@@ -113,7 +128,7 @@ export function Properties() {
 
     const GuessInputAddDisplay = (property) => {
         if (property.sellprice === null || property.guess === null){
-            return <MdAdd onClick={() => AddGuessInput(property)}/>
+            return <MdAdd className = "guessIcon" onClick={() => AddGuessInput(property)}/>
         } else {
             return
         }
@@ -129,19 +144,19 @@ export function Properties() {
     };
 
     const AddGuessInput = async(property) => {
-        let guess = document.getElementById("guessInp"+property.propertyid).value;
+        let guess = document.getElementById("guessInput-"+property.propertyid).value;
         if (guess.length > 3 && guess.length < 10){
             addGuess(property);
         } else if (guess.length < 4) {
-            alert("Invalid Guess: Guess must be greater than $999");
+            alert("Invalid - Guess must be greater than $999");
         } else if (guess.length > 10) {
-            alert("Invalid Guess: Guess must be smaller than $1,000,000,000");
+            alert("Invalid - Guess must be smaller than $1,000,000,000");
         } else {
-            alert("Invalid Guess Input")
+            alert("Invalid - Misc.")
         }
     }
 
-    // Display Rows of Data
+    // Property Table Display
     function PropertyDisplay({properties}) {
         return (
             <div>
@@ -149,16 +164,13 @@ export function Properties() {
                 <table>
                     <thead>
                         <tr>
-                            <td width = "75px" className = "propHeader">PropertyID</td>
-                            <td width = "200px" className = "propHeader">Name</td>
-                            <td width = "250px" className = "propHeader">URL</td>
-                            <td width = "50px" className = "propHeader">ZipCode</td>
-                            <td width = "75px" className = "propHeader">ListPrice</td>
-                            <td width = "75px" className = "propHeader">Zestimate</td>
-                            <td width = "75px" className = "propHeader">Sell Price</td>
-                            <td width = "75px" className = "propHeader">Guess</td>
-                            <td width = "75px"className = "propHeader">     </td>
-                            <td width = "25px"className = "propHeader">     </td>
+                            <th>Name - Description</th>
+                            <th>Street Address - URL</th>
+                            <th>List Price</th>
+                            <th>Zestimate ®</th>
+                            <th>Sell Price</th>
+                            <th>Guess Price</th>
+                            <th>Update Guess</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -169,23 +181,21 @@ export function Properties() {
         );
     }
 
-
-    // Mapping Function
+    // Property Row Template
     function PropertyMap({property}) {
         return (
             <tr id={property.propertyid}>
-                <td>{property.propertyid}</td>
                 <td>{property.name}</td>
                 <td>
-                    <a href = {property.url}>{property.streetaddress + " " + property.city + ", " + property.state}</a>
+                    <a href={property.url} target="_blank" rel="noopener noreferrer">
+                        {property.streetaddress + " " + property.city + ", " + property.state + " " + property.zipcode}
+                    </a>
                 </td>
-                <td>{property.zipcode}</td>
                 <td>{priceFormat(property.listprice)}</td>
                 <td>{priceFormat(property.zestimate)}</td>
                 <td>{guessFormat(property.guess,property.sellprice)}</td>
                 <td>{priceFormat(property.guess)}</td>
-                <td>{GuessInputDisplay(property)}</td>
-                <td>{GuessInputAddDisplay(property)}</td>
+                <td><div className = "guessContainer">{GuessInputDisplay(property)}{GuessInputAddDisplay(property)}</div></td>
             </tr>
         );
     }
@@ -193,11 +203,13 @@ export function Properties() {
     // Base Page Template
     return(
         <div>
-        <h1>User Property History</h1>
-        <p className = "addButton" id = "userScore">{userObj.firstName + " " + userObj.lastName + " Score: " + userScore}</p>
-        <p>Add new properties, make guesses on loaded properties, and wait for results to come in on sold properties!</p>
-        <button className = "addButton" onClick={onAddClick}>+ Add New Item</button>
+        <h1>Property History</h1>
+        <h3 id = "userScore">{userObj.firstName + " " + userObj.lastName + " - Score: " + userObj.score}</h3>
+        <p>Add properties, make guesses, and wait for the results!</p>
+        <div className = "container">
+        <button className = "addButton" onClick={onAddClick}>+ Add New Property</button>
         <PropertyDisplay properties={zillowProperties}/>
+        </div>
         </div>
     )
 }

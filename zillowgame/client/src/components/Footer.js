@@ -8,11 +8,12 @@ function Footer() {
 
     const handleClick = () => {
         let cs = getComputedStyle(document.querySelector(':root'));
-        let bg_color; let text_color; let header_color; let github_icon;
+        let bg_color; let text_color; let header_color; let box_color; let github_icon;
         if (isOn){
             bg_color = cs.getPropertyValue('--dark-mode-bg');
             text_color = cs.getPropertyValue('--dark-mode-text');
             header_color = cs.getPropertyValue('--dark-mode-header');
+            box_color = cs.getPropertyValue('--dark-mode-box');
             github_icon = cs.getPropertyValue('--dark-mode-gh-icon');
         } 
         else 
@@ -20,11 +21,13 @@ function Footer() {
             bg_color = cs.getPropertyValue('--light-mode-bg');
             text_color = cs.getPropertyValue('--light-mode-text');
             header_color = cs.getPropertyValue('--light-mode-header');
+            box_color = cs.getPropertyValue('--light-mode-box');
             github_icon = cs.getPropertyValue('--light-mode-gh-icon');
         }
         document.documentElement.style.setProperty('--bg-color', bg_color);
         document.documentElement.style.setProperty('--text-color', text_color);
         document.documentElement.style.setProperty('--header-bg-color', header_color);
+        document.documentElement.style.setProperty('--box-color', box_color);
         document.documentElement.style.setProperty('--github-icon', github_icon);
         
         const gitHubIcon = document.getElementById("github-icon-home");
