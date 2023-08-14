@@ -4,6 +4,7 @@ function Home() {
     return(
         <div>
             <h1>Welcome To Z-Guess!</h1>
+            <img className = "home-icon" src="/z-guess-dark.png"></img>
             <h2>Where users can try to beat the Zestimate®</h2>
             <br></br>
             <div className="home">

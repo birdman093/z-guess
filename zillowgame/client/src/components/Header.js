@@ -12,12 +12,13 @@ function Header() {
     <Router>
       <div className="main-body">
         <nav>
-          <ul className="navBar">
-            <li><Link to="/">Home</Link></li>
-            <li><Link to="/account">Account</Link></li>
-            <li><Link to="/playlist">Playlist</Link></li>
-            <li><Link to="/properties">Properties</Link></li>
-          </ul>
+            <ul className="navBar">
+              <li><img src="/z-guess-dark.png" alt="Z-Guess" className="navBar-icon" /></li>
+              <li><Link to="/">Home</Link></li>
+              <li><Link to="/account">Account</Link></li>
+              <li><Link to="/playlist">Playlist</Link></li>
+              <li><Link to="/properties">Properties</Link></li>
+            </ul>
         </nav>
 
         <Routes>

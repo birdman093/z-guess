@@ -23,5 +23,10 @@
   background-color: var(--header-bg-color);
 }
 
+.home-icon {
+  max-width: 100px;
+  height: auto;
+}
+
 
 
