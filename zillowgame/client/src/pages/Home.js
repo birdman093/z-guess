@@ -6,7 +6,7 @@ function Home() {
             <h1>Welcome To Z-Guess!</h1>
             <h2>Where users can try to beat the Zestimate®</h2>
             <br></br>
-            <div>
+            <div className="home">
                 <h3>How to Play</h3>
                 <ol className="howtoplay">
                     <li>Login from Account Tab. DB Admin must add you to the system.</li>
@@ -19,7 +19,8 @@ function Home() {
                     <li>Bonus: Create a spotify playlist by inserting 5 spotify links to keep you entertained!</li>
                 </ol>
             </div>
-            <div>
+            <br></br>
+            <div className = "home">
                 <h3>About Z-Guess</h3>
                 <p className='about'>
                     Z-Guess was created to learn React.js and RapidAPI Zillow.com API while building a project for CS 361: Software Development

@@ -39,8 +39,9 @@ function Playlist() {
 
     // Base Page Template
     return(
-    <div className="playlist-container">
-        <h1>ML PlayList Generator</h1>
+        <div>
+            <h1>ML PlayList Generator</h1>
+        <div className="playlist-container">
         <p>Generate playlist to listen to as you cruise Zillow!</p>
         <label for="playListNameInp">Playlist Name:</label>
         <input className="input-field" id="playListNameInp" placeholder="e.g. CS361FinalProject Playlist" />
@@ -62,6 +63,7 @@ function Playlist() {
 
         <button className="generate-button" onClick={GetSpotifyPlaylist}>Get Spotify Playlist</button>
         <p id="playList">{userObj.url}</p>
+    </div>
     </div>
 
     )
