@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {MdAdd, MdCancel} from "react-icons/md";
 import {AddressInUse} from '../config/ServerConfig.mjs';
-import ReactDOM from "react-dom";
 import userObj from "../utility/UserProps.mjs";
 import {numFormat, priceFormat, guessFormat} from "../utility/InputFormat.mjs";
 import { UserLoggedIn, UpdateUserScore } from "../utility/UpdateUser.mjs";
@@ -33,8 +32,8 @@ export function Properties() {
 
         const response = await fetch(`${AddressInUse}/user/score/${userObj.userName}`);
         const resValue = await response.json();
-        UpdateUserScore(resValue[0].score);
         const userScore = resValue[0].score;
+        UpdateUserScore(userScore);
         setUserScore(userScore);
     }
 

@@ -1,10 +1,11 @@
-import React, {useEffect, useState} from "react";
-import {AddressInUse, SpotifyAddress} from "../config/ServerConfig.mjs";
+import React from "react";
+import {SpotifyAddress} from "../config/ServerConfig.mjs";
 import userObj from "../utility/UserProps.mjs";
 import { UserLoggedIn } from "../utility/UpdateUser.mjs";
 import { ValidateUserPlayListEntry, GetSongs } from "../utility/ValidatePlaylist.mjs";
 import './Playlist.css';
 
+var serverSetup = false;
 
 function Playlist() {
     
@@ -20,21 +21,23 @@ function Playlist() {
      
         const songPass ={title, tracks}
 
-        alert("Playlist Server Down -- Check Back Later");
-        return;
-        /*
-        const response = await fetch(`${SpotifyAddress}/playlistgenerator`, {
-            method: 'POST',
-            body: JSON.stringify(songPass),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const resValue = await response.json();
+        if (serverSetup){
+            const response = await fetch(`${SpotifyAddress}/playlistgenerator`, {
+                method: 'POST',
+                body: JSON.stringify(songPass),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            const resValue = await response.json();
+    
+            userObj.url = resValue.link;
+            document.getElementById("playList").innerHTML = userObj.url;
 
-        userObj.url = resValue.link;
-        document.getElementById("playList").innerHTML = userObj.url;
-        */
+        } else {
+            alert("Playlist Server Down -- Check Back Later");
+            return;
+        }
     }
 
     // Base Page Template

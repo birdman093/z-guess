@@ -17,7 +17,7 @@ export function SetValidUserGreeting(valid, first = false){
 
 // Updates User Properties based on input data
 export function UpdateUser(resValue){
-    if (resValue.length == 1){
+    if (resValue.length === 1){
         userObj.userName = resValue[0].username;
         userObj.firstName = resValue[0].firstname;
         userObj.lastName = resValue[0].lastname;
