@@ -1,5 +1,3 @@
-import userObj from "./UserProps.mjs";
-
 // Valid = True displays a valid greeting to the logged in user, If Valid = False displays invalid sign-in if not the first download, and No user 
 // logged in if second download
 export function ValidateUserPlayListEntry(title, song1){

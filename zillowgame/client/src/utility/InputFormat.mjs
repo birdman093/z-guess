@@ -1,5 +1,3 @@
-import ReactDOM from "react-dom";
-
 // Reformats input format to be numbers only
 export function numFormat(event) {
     var tag = document.getElementById(event.target.id);
@@ -18,7 +16,7 @@ export function priceFormat(price) {
     for (let idx = strPrice.length-1; idx > -1; idx--) {
         newprice = strPrice[idx] + newprice;
         threeCounter += 1
-        if (threeCounter === 3 && idx != 0){
+        if (threeCounter === 3 && idx !== 0){
             newprice = "," + newprice
             threeCounter = 0
         }

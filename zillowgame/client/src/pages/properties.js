@@ -1,40 +1,29 @@
 import React, {useEffect, useState} from "react";
 import {MdAdd, MdCancel} from "react-icons/md";
 import {AddressInUse} from '../config/ServerConfig.mjs';
-import userObj from "../utility/UserProps.mjs";
+import { useUser } from "../components/UserProvider.js";
 import {numFormat, priceFormat, guessFormat} from "../utility/InputFormat.mjs";
-import { UserLoggedIn, UpdateUserScore } from "../utility/UpdateUser.mjs";
 import {ValidateProperty, InvalidPostResponse} from "../utility/ValidateProperty.mjs";
 import './Properties.css';
 
 export function Properties() {
     useEffect(() => {
         loadProperties();
-        loadScore();
     }, []);
 
     const [zillowProperties, setZillowProperties] = useState([]);
-    const [userScore, setUserScore] = useState([]);
     const [addField, setAddField] = useState([]);
 
-    // Load Properties Stored in DB for userName
+    const {user, UserLoggedIn, UpdateUserScore} = useUser();
+
+
+    // Load Properties
     const loadProperties = async () => {
         if (!UserLoggedIn()) {return;}
 
-        const response = await fetch(`${AddressInUse}/properties/${userObj.userName}`);
+        const response = await fetch(`${AddressInUse}/properties/${user.userName}`);
         const zillowProperties = await response.json();
         setZillowProperties(zillowProperties);
-    }
-
-    // Load Score Stored in DB for userName
-    const loadScore = async () => {
-        if (!UserLoggedIn()) {return;}
-
-        const response = await fetch(`${AddressInUse}/user/score/${userObj.userName}`);
-        const resValue = await response.json();
-        const userScore = resValue[0].score;
-        UpdateUserScore(userScore);
-        setUserScore(userScore);
     }
 
     // Add Property
@@ -46,7 +35,7 @@ export function Properties() {
         let name = document.getElementById("nameInp").value;
         if (!ValidateProperty(url,name)) {return;}
 
-        let userName = userObj.userName;
+        let userName = user.userName;
 
         const response = await fetch(`${AddressInUse}/properties`, {
             method: 'POST',
@@ -69,7 +58,7 @@ export function Properties() {
     const addGuess = async(property) => {
         let propertyID = property.propertyid; let sellPrice = property.sellprice;
         let guess = document.getElementById("guessInput-"+propertyID).value;
-        let userName = userObj.userName; let score = userObj.score;
+        let userName = user.userName; let score = user.score;
         
         const newGuess = {propertyID, sellPrice, score, userName, guess};
      
@@ -82,8 +71,10 @@ export function Properties() {
         });
         if(response.status === 201){
             alert(`Successfully added ${propertyID} guess!`);
+            const resValue = await response.json();
+            UpdateUserScore(resValue.score);
+
             loadProperties();
-            loadScore();
         } else {
             InvalidPostResponse(response, propertyID);
         }
@@ -203,7 +194,7 @@ export function Properties() {
     return(
         <div>
         <h1>Property History</h1>
-        <h3 id = "userScore">{userObj.firstName + " " + userObj.lastName + " - Score: " + userObj.score}</h3>
+        <h3 id = "userScore">{user.firstName + " " + user.lastName + " - Score: " + user.score}</h3>
         <div className = "container">
         <button className = "addButton" onClick={onAddClick}>+ Add New Property</button>
         <PropertyDisplay properties={zillowProperties}/>

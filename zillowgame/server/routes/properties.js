@@ -98,7 +98,7 @@ propertiesRoutes.post('/properties', async function(req, res)
     const options = config.rapidAPI
     options.params.property_url = req.body.url;
     const response = axios.request(options);
-    console.log(response)
+    console.log(response);
 
     response.then((response) => {
         let [listPrice, sellPrice] = GetZillowPrice(response.data.priceHistory);

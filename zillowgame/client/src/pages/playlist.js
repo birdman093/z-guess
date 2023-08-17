@@ -1,13 +1,15 @@
-import React from "react";
+import React, {useState} from "react";
 import {SpotifyAddress} from "../config/ServerConfig.mjs";
-import userObj from "../utility/UserProps.mjs";
-import { UserLoggedIn } from "../utility/UpdateUser.mjs";
+import { useUser } from "../components/UserProvider.js";
 import { ValidateUserPlayListEntry, GetSongs } from "../utility/ValidatePlaylist.mjs";
 import './Playlist.css';
 
 var serverSetup = false;
 
 function Playlist() {
+
+    const {user, UserLoggedIn} = useUser();
+    const [url, setURL] = useState('');
     
     //Makes request to spotify microservice and returns link to a playlist based off the song urls
     const GetSpotifyPlaylist = async () => {
@@ -31,8 +33,7 @@ function Playlist() {
             });
             const resValue = await response.json();
     
-            userObj.url = resValue.link;
-            document.getElementById("playList").innerHTML = userObj.url;
+            setURL(resValue.link);
 
         } else {
             alert("Playlist Server Down -- Check Back Later");
@@ -65,7 +66,7 @@ function Playlist() {
         </div>
 
         <button className="generate-button" onClick={GetSpotifyPlaylist}>Get Spotify Playlist</button>
-        <p id="playList">{userObj.url}</p>
+        <p id="playList">{url}</p>
     </div>
     </div>
 

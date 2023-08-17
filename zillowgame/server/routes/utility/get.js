@@ -1,12 +1,17 @@
 import errorMessage from "./error.js";
 
-export function get(connection, sql, inserts, req, res) {
+export function getOne(connection, sql, inserts, req, res) {
     connection.query(sql, inserts, function(error, results, fields){
         if(error){
             console.error("DB Error:", error);
             return res.status(400).json({ error: errorMessage("DB-Select") });
         }
-        return res.status(201).json(results.rows);
+        else if (results.rows.length === 1){
+            return res.status(201).json(results.rows[0]);
+        } else {
+            return res.status(201).json({});
+        }
+        
     });
 };
 

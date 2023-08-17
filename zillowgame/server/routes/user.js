@@ -1,4 +1,4 @@
-import {get} from './utility/get.js';
+import {getOne} from './utility/get.js';
 import {setScore} from './utility/post.js';
 import connection from '../middlewares/dbSetup.js';
 
@@ -12,15 +12,15 @@ userRoutes.post('/user', function(req, res)
     var sql = `SELECT UserName, FirstName, LastName, Score FROM Accounts 
     WHERE UserName = $1 AND Password = $2`;
     var inserts = [req.body.userName, req.body.password]
-    get(connection, sql, inserts, req, res);                                            
+    getOne(connection, sql, inserts, req, res);                                            
 });
 
 //  User Score (No Password needed currently)
 userRoutes.get('/user/score/:userName', function(req, res)
 {
-    var sql = `SELECT Score FROM Accounts WHERE UserName = $1`;
+    var sql = `SELECT Score FROM Accounts WHERE UserName = $1;`;
     var inserts = [req.params.userName]
-    get(connection, sql, inserts, req, res);                                            
+    getOne(connection, sql, inserts, req, res);                                            
 });
 
 // User Guess for property

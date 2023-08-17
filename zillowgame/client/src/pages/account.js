@@ -1,19 +1,25 @@
-import React, {useEffect} from "react";
+import React, {useState, useEffect } from 'react';
+import { useUser } from '../components/UserProvider.js';
 import {AddressInUse} from "../config/ServerConfig.mjs";
-import userObj from "../utility/UserProps.mjs";
-import { SetValidUserGreeting, UpdateUser } from "../utility/UpdateUser.mjs";
 import './Account.css';
 
 function Account() {
+    const [userName, setUserName] = useState('');
+    const [password, setPassword] = useState('');
+    const [greeting, setGreeting] = useState('');
+    const {user, SetUserContext, GreetingMessage} = useUser();
+    const [loginAttempted, setLoginAttempted] = useState(false);
+    
     useEffect(() => {
-        CurrLogIn();
-    }, []);
+        if (loginAttempted) {
+            setGreeting(GreetingMessage(false));
+        } else {
+            setGreeting(GreetingMessage(true));
+        }
+      }, [user, loginAttempted, GreetingMessage]);
 
     const VerifyPassword = async () => {
-        let userName = document.getElementById("userNameInp").value;
-        let password = document.getElementById("passwordInp").value;
-        const userLogin = {userName, password};
-
+        
         if (userName.length === 0) {
             alert("Invalid UserName Entry")
             return
@@ -21,7 +27,7 @@ function Account() {
             alert("Invalid password Entry")
             return
         }
-     
+        const userLogin = {userName, password};
         const response = await fetch(`${AddressInUse}/user`, {
             method: 'POST',
             body: JSON.stringify(userLogin),
@@ -30,12 +36,11 @@ function Account() {
             }
         });
 
-        const resValue = await response.json();
-        UpdateUser(resValue);
-    }
-
-    const CurrLogIn = () => {
-        SetValidUserGreeting(userObj.userName !== "",true);
+        const userResponse = await response.json();
+        await SetUserContext(userResponse);
+        setLoginAttempted(true);
+        setGreeting(GreetingMessage(false));
+        
     }
 
     // Base Page Template
@@ -44,14 +49,14 @@ function Account() {
         <h1>Account Login</h1>
         <div className = "AccountContainer">
             <label>UserName: </label>
-            <input className = "accountAdd" id ="userNameInp"></input>
+            <input className = "accountAdd" value={userName} onChange={e => setUserName(e.target.value)}></input>
             <br></br>
             <label>Password: </label>
-            <input className = "accountAdd" type = "password" id = "passwordInp"></input>
+            <input className = "accountAdd" type = "password" value={password} onChange={e => setPassword(e.target.value)}></input>
             <br></br>
             <button onClick = {VerifyPassword}>Verify</button>
         </div>
-        <p id = "Greeting"></p>
+        {greeting}
         </div>
     )
 }
