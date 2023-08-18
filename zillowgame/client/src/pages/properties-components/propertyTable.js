@@ -1,8 +1,7 @@
 import {numFormat, priceFormat, guessFormat} from "../../utility/InputFormat.mjs";
-import { useUser } from "../../components/UserProvider.js";
-import {MdAdd, MdCancel} from "react-icons/md";
+import {MdAdd} from "react-icons/md";
 import {AddressInUse} from '../../config/ServerConfig.mjs';
-import {ValidateProperty, InvalidPostResponse} from "../../utility/ValidateProperty.mjs";
+import {InvalidPostResponse} from "../../utility/ValidateProperty.mjs";
 
 // Property Table Display
 export function PropertyDisplay({properties, user, UpdateUserScore}) {
@@ -102,7 +101,6 @@ const addGuess = async(property, user, UpdateUserScore) => {
         alert(`Successfully added ${propertyID} guess!`);
         const resValue = await response.json();
         UpdateUserScore(resValue.score);
-        console.log(guess);
         document.getElementById("guessDisplay-"+property.propertyid).innerHTML = priceFormat(guess);
     } else {
         InvalidPostResponse(response, propertyID);

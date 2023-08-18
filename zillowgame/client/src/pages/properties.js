@@ -9,8 +9,9 @@ import './Properties.css';
 export function Properties() {
     const [zillowProperties, setZillowProperties] = useState([]);
     const [addField, setAddField] = useState([]);
-    const [addURL, setURL] = useState('');
-    const [addName, setName] = useState('');
+    const [addLink, setLink] = useState();
+    const [addLinkName, setLinkName] = useState();
+    
     const {user, UserLoggedIn, UpdateUserScore} = useUser();
 
     const loadProperties = useCallback(async () => {
@@ -31,12 +32,10 @@ export function Properties() {
 
     // Add Property
     const addZillowLink = async() => {
-        let url = addURL;
-        let name = addName;
-        console.log("URL" + url);
-        console.log("NAME" + name);
-
         if (!UserLoggedIn()) {return;}
+
+        let url = addLink;
+        let name = addLinkName;
 
         if (!ValidateProperty(url,name)) {return;}
 
@@ -56,37 +55,40 @@ export function Properties() {
             const data = await response.json();
             console.log(data);
             setZillowProperties(prevProps => [...prevProps, data]);
-            removeAddClick();
         } else {
             InvalidPostResponse(response, url);
         }
     }
 
-    // Add Properties
+    // Add Properties Section
     const PropertyLinkInput = () => {
-        return <div className = "PropertyAddBox">
-        <div className = "propertyInput">
-            <input
+        return (
+        <div className = "PropertyAddBox">
+            <div>
+                <input 
+                className = "PropertyInput"
                 placeholder="Property Description e.g. Snake House"
-                value={addName}
-                onChange={e => setName(e.target.value)}
-            />
-        </div>
-        <div className = "propertyInput">
-            <input
-                placeholder="Zillow URL e.g. https://www.zillow.com/homedetails/48-Winding-Ln-Feasterville-PA-19053/9025882_zpid/"
-                value={addURL}
-                onChange={e => {
-                    console.log("changing");
-                    setURL(e.target.value);
-                  }}
-            />
-        </div>
-        <div>
-            <MdAdd className="newPropIcon" onClick={addZillowLink} title="Add Property" />
-            <MdCancel className="newPropIcon" onClick={removeAddClick} title="Cancel" />
-        </div>
-    </div>
+                value={addLinkName} 
+                onChange={(e) => {
+                    console.log("URL:", e.target.value);
+                    setLinkName(e.target.value);
+                }}/>
+            </div>
+            <div>
+                <input
+                    className = "PropertyInput"
+                    placeholder="Zillow URL e.g. https://www.zillow.com/homedetails/48-Winding-Ln-Feasterville-PA-19053/9025882_zpid/"
+                    value={addLink}
+                    onChange={(e) => {
+                        console.log("URL:", e.target.value);
+                        setLink(e.target.value);
+                    }}/>
+            </div>
+            <div>
+                <MdAdd className="newPropIcon" onClick={addZillowLink} title="Add Property" />
+                <MdCancel className="newPropIcon" onClick={removeAddClick} title="Cancel" />
+            </div>
+        </div>)
     
     };
     
@@ -95,7 +97,7 @@ export function Properties() {
     };
 
     const removeAddClick = event => {
-        setAddField();
+        setAddField(<></>);
     };
 
     // Base Page Template
@@ -105,10 +107,8 @@ export function Properties() {
         <h3 id = "userScore">{user.firstName + " " + user.lastName + " - Score: " + user.score}</h3>
         <div className = "container">
         <button className = "addButton" onClick={onAddClick}>+ Add New Property</button>
-        <div>
-            {addField}
-            <PropertyDisplay properties={zillowProperties} user = {user} UpdateUserScore = {UpdateUserScore}/>
-        </div>
+        {addField}
+        <PropertyDisplay properties={zillowProperties} user = {user} UpdateUserScore = {UpdateUserScore}/>
         </div>
         </div>
     )

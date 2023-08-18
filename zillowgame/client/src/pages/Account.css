@@ -45,4 +45,11 @@
   button:active {
     background-color: #2196F3;
   }
+
+  input.accountAdd{
+    font-size: 12px;
+    width: 150px;
+    margin: 5px 20px 5px 20px;
+  }
+  
   

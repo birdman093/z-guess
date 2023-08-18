@@ -78,11 +78,13 @@ tr:hover {
 }
 
 .PropertyInput {
-  margin-bottom: "10px";
-  border-radius: '5px'; 
-  padding: '10px';
-  width: '80%';
-  border-bottom: '2px solid #ccc';
+  margin-bottom: 10px;
+  border-radius: 5px; 
+  padding: 10px;
+  width: 85%;
+  margin-left: auto;
+  margin-right: auto;
+  border-bottom: 2px solid #ccc;
 }
 
 .container {
