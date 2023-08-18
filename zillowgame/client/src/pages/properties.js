@@ -2,13 +2,15 @@ import React, {useEffect, useState, useCallback} from "react";
 import {MdAdd, MdCancel} from "react-icons/md";
 import {AddressInUse} from '../config/ServerConfig.mjs';
 import { useUser } from "../components/UserProvider.js";
-import {numFormat, priceFormat, guessFormat} from "../utility/InputFormat.mjs";
 import {ValidateProperty, InvalidPostResponse} from "../utility/ValidateProperty.mjs";
+import { PropertyDisplay } from "./properties-components/propertyTable.js";
 import './Properties.css';
 
 export function Properties() {
     const [zillowProperties, setZillowProperties] = useState([]);
     const [addField, setAddField] = useState([]);
+    const [addURL, setURL] = useState('');
+    const [addName, setName] = useState('');
     const {user, UserLoggedIn, UpdateUserScore} = useUser();
 
     const loadProperties = useCallback(async () => {
@@ -29,15 +31,18 @@ export function Properties() {
 
     // Add Property
     const addZillowLink = async() => {
+        let url = addURL;
+        let name = addName;
+        console.log("URL" + url);
+        console.log("NAME" + name);
 
         if (!UserLoggedIn()) {return;}
 
-        let url = document.getElementById("urlInp").value;
-        let name = document.getElementById("nameInp").value;
         if (!ValidateProperty(url,name)) {return;}
 
         let userName = user.userName;
 
+        removeAddClick();
         const response = await fetch(`${AddressInUse}/properties`, {
             method: 'POST',
             body: JSON.stringify({name,url,userName}),
@@ -57,47 +62,24 @@ export function Properties() {
         }
     }
 
-    // add guess
-    const addGuess = async(property) => {
-        let propertyID = property.propertyid; let sellPrice = property.sellprice;
-        let guess = document.getElementById("guessInput-"+propertyID).value;
-        let userName = user.userName; let score = user.score;
-        
-        const newGuess = {propertyID, sellPrice, score, userName, guess};
-     
-        const response = await fetch(`${AddressInUse}/user/guess`, {
-            method: 'POST',
-            body: JSON.stringify(newGuess),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        if(response.status === 201){
-            alert(`Successfully added ${propertyID} guess!`);
-            const resValue = await response.json();
-            UpdateUserScore(resValue.score);
-
-            loadProperties();
-        } else {
-            InvalidPostResponse(response, propertyID);
-        }
-    }
-
     // Add Properties
     const PropertyLinkInput = () => {
         return <div className = "PropertyAddBox">
         <div className = "propertyInput">
             <input
-                className="newPropAdd"
-                id="nameInp"
                 placeholder="Property Description e.g. Snake House"
-                
+                value={addName}
+                onChange={e => setName(e.target.value)}
             />
         </div>
         <div className = "propertyInput">
             <input
-                id="urlInp"
                 placeholder="Zillow URL e.g. https://www.zillow.com/homedetails/48-Winding-Ln-Feasterville-PA-19053/9025882_zpid/"
+                value={addURL}
+                onChange={e => {
+                    console.log("changing");
+                    setURL(e.target.value);
+                  }}
             />
         </div>
         <div>
@@ -107,26 +89,6 @@ export function Properties() {
     </div>
     
     };
-
-    const GuessInputDisplay = (property) => {
-        if (property.sellprice === null || property.guess === null){
-            return <input
-            className = "guessInput" 
-            id = {"guessInput-"+property.propertyid} onKeyUp={(id) => numFormat(id)} 
-            placeholder="$x,xxx,xxx!"/>
-        } else {
-            return
-        }
-    }
-
-    const GuessInputAddDisplay = (property) => {
-        if (property.sellprice === null || property.guess === null){
-            return <MdAdd className = "guessIcon" onClick={() => AddGuessInput(property)}/>
-        } else {
-            return
-        }
-    };
-
     
     const onAddClick = event => {
         setAddField(<PropertyLinkInput/>);
@@ -136,63 +98,6 @@ export function Properties() {
         setAddField();
     };
 
-    const AddGuessInput = async(property) => {
-        let guess = document.getElementById("guessInput-"+property.propertyid).value;
-        if (guess.length > 3 && guess.length < 10){
-            addGuess(property);
-        } else if (guess.length < 4) {
-            alert("Invalid - Guess must be greater than $999");
-        } else if (guess.length > 10) {
-            alert("Invalid - Guess must be smaller than $1,000,000,000");
-        } else {
-            alert("Invalid - Misc.")
-        }
-    }
-
-    // Property Table Display
-    function PropertyDisplay({properties}) {
-        return (
-            <div>
-                {addField}
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Name - Description</th>
-                            <th>Street Address - URL</th>
-                            <th>List Price</th>
-                            <th>Zestimate ®</th>
-                            <th>Sell Price</th>
-                            <th>Guess Price</th>
-                            <th>Update Guess</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {properties.map((property, idx) => <PropertyMap property={property} key={idx} />)}
-                    </tbody>
-                </table>
-            </div>
-        );
-    }
-
-    // Property Row Template
-    function PropertyMap({property}) {
-        return (
-            <tr id={property.propertyid}>
-                <td>{property.name}</td>
-                <td>
-                    <a href={property.url} target="_blank" rel="noopener noreferrer">
-                        {property.streetaddress + " " + property.city + ", " + property.state + " " + property.zipcode}
-                    </a>
-                </td>
-                <td>{priceFormat(property.listprice)}</td>
-                <td>{priceFormat(property.zestimate)}</td>
-                <td>{guessFormat(property.guess,property.sellprice)}</td>
-                <td>{priceFormat(property.guess)}</td>
-                <td><div className = "guessContainer">{GuessInputDisplay(property)}{GuessInputAddDisplay(property)}</div></td>
-            </tr>
-        );
-    }
-
     // Base Page Template
     return(
         <div>
@@ -200,7 +105,10 @@ export function Properties() {
         <h3 id = "userScore">{user.firstName + " " + user.lastName + " - Score: " + user.score}</h3>
         <div className = "container">
         <button className = "addButton" onClick={onAddClick}>+ Add New Property</button>
-        <PropertyDisplay properties={zillowProperties}/>
+        <div>
+            {addField}
+            <PropertyDisplay properties={zillowProperties} user = {user} UpdateUserScore = {UpdateUserScore}/>
+        </div>
         </div>
         </div>
     )
