@@ -6,7 +6,7 @@ import errorMessage from './utility/error.js';
 
 import express from 'express';
 import axios from 'axios';
-import { userExists } from './utility/get.js';
+import { userExists, propertyColumns, sendPropertyData } from './utility/get.js';
 
 const propertiesRoutes = express.Router();
 
@@ -14,20 +14,8 @@ const propertiesRoutes = express.Router();
 propertiesRoutes.get('/properties/:userName', function(req, res)
 {
     var qString = `SELECT
-    AccountsToProperties.PropertyID,
-    AccountsToProperties.Guess,
-    AccountsToProperties.Name,
-    AccountsToProperties.Description,
-    Properties.StreetAddress,
-    Properties.City,
-    Properties.State,
-    Properties.ZipCode,
-    Properties.ListPrice,
-    Properties.Zestimate,
-    Properties.SellPrice,
-    Properties.Url,
-    Properties.Image 
-    FROM 
+    ${propertyColumns.join(',\n    ')}
+    FROM
         Accounts 
     INNER JOIN 
         AccountsToProperties ON Accounts.UserName = AccountsToProperties.UserName 
@@ -123,11 +111,12 @@ propertiesRoutes.post('/properties', async function(req, res)
                 res.end();
             }
             else{
-                console.log("next-round");
                 var sql2 = `INSERT INTO AccountsToProperties(UserName, PropertyID, Name, Description, Guess) 
                 VALUES ($1, $2, $3, $4, $5)`;
                 var inserts2 = [req.body.userName, String(response.data.zpid), req.body.name, null, null];
                 insert(req, res, sql2, inserts2, connection);
+                console.log("sending");
+                sendPropertyData(connection, res, req.body.userName, String(response.data.zpid));
             }
         });
         
@@ -139,5 +128,7 @@ propertiesRoutes.post('/properties', async function(req, res)
         res.end();
     });
 });
+
+
 
 export default propertiesRoutes;

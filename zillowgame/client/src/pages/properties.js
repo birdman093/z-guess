@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useCallback} from "react";
 import {MdAdd, MdCancel} from "react-icons/md";
 import {AddressInUse} from '../config/ServerConfig.mjs';
 import { useUser } from "../components/UserProvider.js";
@@ -7,24 +7,25 @@ import {ValidateProperty, InvalidPostResponse} from "../utility/ValidateProperty
 import './Properties.css';
 
 export function Properties() {
-    useEffect(() => {
-        loadProperties();
-    }, []);
-
     const [zillowProperties, setZillowProperties] = useState([]);
     const [addField, setAddField] = useState([]);
-
     const {user, UserLoggedIn, UpdateUserScore} = useUser();
 
+    const loadProperties = useCallback(async () => {
+        if (!UserLoggedIn()) return;
 
-    // Load Properties
-    const loadProperties = async () => {
-        if (!UserLoggedIn()) {return;}
+        try {
+            const response = await fetch(`${AddressInUse}/properties/${user.userName}`);
+            const data = await response.json();
+            setZillowProperties(data);
+        } catch (error) {
+            console.error('Error loading properties:', error);
+        }
+    }, [user, UserLoggedIn]);
 
-        const response = await fetch(`${AddressInUse}/properties/${user.userName}`);
-        const zillowProperties = await response.json();
-        setZillowProperties(zillowProperties);
-    }
+    useEffect(() => {
+        loadProperties();
+    }, [loadProperties]);
 
     // Add Property
     const addZillowLink = async() => {
@@ -44,10 +45,12 @@ export function Properties() {
                 'Content-Type': 'application/json'
             }
         });
-        
+        console.log(response);
         if(response.status === 201){
             alert(`Successfully added ${url}!`);
-            loadProperties();
+            const data = await response.json();
+            console.log(data);
+            setZillowProperties(prevProps => [...prevProps, data]);
             removeAddClick();
         } else {
             InvalidPostResponse(response, url);

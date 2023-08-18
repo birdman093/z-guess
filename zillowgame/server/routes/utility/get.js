@@ -1,5 +1,21 @@
 import errorMessage from "./error.js";
 
+export const propertyColumns = [
+    "AccountsToProperties.PropertyID",
+    "AccountsToProperties.Guess",
+    "AccountsToProperties.Name",
+    "AccountsToProperties.Description",
+    "Properties.StreetAddress",
+    "Properties.City",
+    "Properties.State",
+    "Properties.ZipCode",
+    "Properties.ListPrice",
+    "Properties.Zestimate",
+    "Properties.SellPrice",
+    "Properties.Url",
+    "Properties.Image"
+];
+
 export function getOne(connection, sql, inserts, req, res) {
     connection.query(sql, inserts, function(error, results, fields){
         if(error){
@@ -31,6 +47,32 @@ export function userExists(connection, inserts) {
                 resolve(results.rows[0].user_exists);
             }
         });
+    });
+}
+
+export function sendPropertyData(connection, res, userName, propertyID) {
+    const qString = `
+    SELECT
+        ${propertyColumns.join(',\n    ')}
+    FROM 
+        Accounts 
+    INNER JOIN 
+        AccountsToProperties ON Accounts.UserName = AccountsToProperties.UserName 
+    INNER JOIN 
+        Properties ON AccountsToProperties.PropertyID = Properties.PropertyID 
+    WHERE 
+        Accounts.UserName = $1 AND Properties.PropertyID = $2`;
+
+    connection.query(qString, [userName, propertyID],function(error, results, fields){
+        if(error){
+            res.write(errorMessage("DB-Select"));
+            res.status(400).end();
+        }
+        else if (results.rows.length === 1){
+            return res.status(201).json(results.rows[0]);
+        } else {
+            return res.status(201).json({});
+        }
     });
 }
 

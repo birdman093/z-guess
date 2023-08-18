@@ -6,9 +6,6 @@ export function insert(req, res, sql, inserts, connection) {
     connection.query(sql,inserts,function(error, results, fields){
         if(error){
             SQLError(error, res)
-        }else{
-            res.status(201);
-            res.end();
         }
     });
 }
