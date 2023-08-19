@@ -115,7 +115,6 @@ propertiesRoutes.post('/properties', async function(req, res)
                 VALUES ($1, $2, $3, $4, $5)`;
                 var inserts2 = [req.body.userName, String(response.data.zpid), req.body.name, null, null];
                 insert(req, res, sql2, inserts2, connection);
-                console.log("sending");
                 sendPropertyData(connection, res, req.body.userName, String(response.data.zpid));
             }
         });

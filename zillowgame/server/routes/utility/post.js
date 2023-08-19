@@ -23,7 +23,6 @@ function update(req, res, sql, inserts, connection){
 export function setScore(req, res, connection) {
     var sql = "UPDATE AccountsToProperties SET Guess = $1 WHERE UserName = $2 AND PropertyID = $3" 
     var inserts = [req.body.guess, req.body.userName, req.body.propertyID, ];
-    console.log(inserts);
     connection.query(sql,inserts,function(error, results, fields){
         
         if(error){

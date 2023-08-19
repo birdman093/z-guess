@@ -1,10 +1,8 @@
-import {numFormat, priceFormat, guessFormat} from "../../utility/InputFormat.mjs";
-import {MdAdd} from "react-icons/md";
-import {AddressInUse} from '../../config/ServerConfig.mjs';
-import {InvalidPostResponse} from "../../utility/ValidateProperty.mjs";
+import {priceFormat, guessFormat} from "../../utility/InputFormat.mjs";
+import { GuessInputDisplay, GuessInputAddDisplay } from "./propertyGuess.js";
 
 // Property Table Display
-export function PropertyDisplay({properties, user, UpdateUserScore}) {
+export function PropertyDisplay({properties, setProperties, user, UpdateUserScore}) {
     return (
         <table>
             <thead>
@@ -21,7 +19,7 @@ export function PropertyDisplay({properties, user, UpdateUserScore}) {
             <tbody>
                 {properties.map(
                     (property, idx) => (
-                <PropertyMap property={property} user = {user} UpdateUserScore = {UpdateUserScore} key={idx} />)
+                <PropertyMap property={property} setProperties={setProperties} user = {user} UpdateUserScore = {UpdateUserScore} key={idx} />)
                 )}
             </tbody>
         </table>
@@ -29,7 +27,7 @@ export function PropertyDisplay({properties, user, UpdateUserScore}) {
 }
 
 // Property Row Template
-export function PropertyMap({property, user, UpdateUserScore}) {
+export function PropertyMap({property, setProperties, user, UpdateUserScore}) {
     return (
         <tr id={property.propertyid}>
             <td>{property.name}</td>
@@ -41,68 +39,13 @@ export function PropertyMap({property, user, UpdateUserScore}) {
             <td>{priceFormat(property.listprice)}</td>
             <td>{priceFormat(property.zestimate)}</td>
             <td>{guessFormat(property.guess,property.sellprice)}</td>
-            <td id = {"guessDisplay-"+property.propertyid}>{priceFormat(property.guess)}</td>
+            <td>{priceFormat(property.guess)}</td>
             <td>
-                <div className = "guessContainer">{GuessInputDisplay(property)}{GuessInputAddDisplay(property,user, UpdateUserScore)}
+                <div className = "guessContainer">
+                    {GuessInputDisplay(property, setProperties)}
+                    {GuessInputAddDisplay(property, setProperties, user, UpdateUserScore)}
                 </div>
             </td>
         </tr>
     );
-}
-
-const GuessInputDisplay = (property) => {
-    if (property.sellprice === null || property.guess === null){
-        return <input
-        className = "guessInput" 
-        id = {"guessInput-"+property.propertyid} onKeyUp={(id) => numFormat(id)} 
-        placeholder="$x,xxx,xxx!"/>
-    } else {
-        return
-    }
-}
-
-const GuessInputAddDisplay = (property,user, UpdateUserScore) => {
-    if (property.sellprice === null || property.guess === null){
-        return <MdAdd className = "guessIcon" onClick={() => AddGuessInput(property, user, UpdateUserScore)}/>
-    } else {
-        return
-    }
-};
-
-const AddGuessInput = async(property,user, UpdateUserScore) => {
-    let guess = document.getElementById("guessInput-"+property.propertyid).value;
-    if (guess.length > 3 && guess.length < 10){
-        addGuess(property, user, UpdateUserScore);
-    } else if (guess.length < 4) {
-        alert("Invalid - Guess must be greater than $999");
-    } else if (guess.length > 10) {
-        alert("Invalid - Guess must be smaller than $1,000,000,000");
-    } else {
-        alert("Invalid - Misc.")
-    }
-}
-
-// add guess
-const addGuess = async(property, user, UpdateUserScore) => {
-    let propertyID = property.propertyid; let sellPrice = property.sellprice;
-    let guess = document.getElementById("guessInput-"+propertyID).value;
-    let userName = user.userName; let score = user.score;
-    
-    const newGuess = {propertyID, sellPrice, score, userName, guess};
- 
-    const response = await fetch(`${AddressInUse}/user/guess`, {
-        method: 'POST',
-        body: JSON.stringify(newGuess),
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    });
-    if(response.status === 201){
-        alert(`Successfully added ${propertyID} guess!`);
-        const resValue = await response.json();
-        UpdateUserScore(resValue.score);
-        document.getElementById("guessDisplay-"+property.propertyid).innerHTML = priceFormat(guess);
-    } else {
-        InvalidPostResponse(response, propertyID);
-    }
 }

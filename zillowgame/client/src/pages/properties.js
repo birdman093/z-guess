@@ -1,9 +1,9 @@
 import React, {useEffect, useState, useCallback} from "react";
-import {MdAdd, MdCancel} from "react-icons/md";
 import {AddressInUse} from '../config/ServerConfig.mjs';
 import { useUser } from "../components/UserProvider.js";
 import {ValidateProperty, InvalidPostResponse} from "../utility/ValidateProperty.mjs";
 import { PropertyDisplay } from "./properties-components/propertyTable.js";
+import { PropertyLinkInput } from "./properties-components/propertyAdd.js";
 import './Properties.css';
 
 export function Properties() {
@@ -11,7 +11,6 @@ export function Properties() {
     const [addField, setAddField] = useState([]);
     const [addLink, setLink] = useState();
     const [addLinkName, setLinkName] = useState();
-    
     const {user, UserLoggedIn, UpdateUserScore} = useUser();
 
     const loadProperties = useCallback(async () => {
@@ -20,7 +19,8 @@ export function Properties() {
         try {
             const response = await fetch(`${AddressInUse}/properties/${user.userName}`);
             const data = await response.json();
-            setZillowProperties(data);
+            const updatedData = data.map(item => ({ ...item, unsetGuess: '1000' }));
+            setZillowProperties(updatedData);
         } catch (error) {
             console.error('Error loading properties:', error);
         }
@@ -30,7 +30,7 @@ export function Properties() {
         loadProperties();
     }, [loadProperties]);
 
-    // Add Property
+    // Add Property to DB, User
     const addZillowLink = async() => {
         if (!UserLoggedIn()) {return;}
 
@@ -53,51 +53,28 @@ export function Properties() {
         if(response.status === 201){
             alert(`Successfully added ${url}!`);
             const data = await response.json();
-            console.log(data);
-            setZillowProperties(prevProps => [...prevProps, data]);
+            const newData = { ...data, unsetGuess: '1000' };
+            setZillowProperties(prevProps => [...prevProps, newData]);
         } else {
             InvalidPostResponse(response, url);
         }
     }
-
-    // Add Properties Section
-    const PropertyLinkInput = () => {
-        return (
-        <div className = "PropertyAddBox">
-            <div>
-                <input 
-                className = "PropertyInput"
-                placeholder="Property Description e.g. Snake House"
-                value={addLinkName} 
-                onChange={(e) => {
-                    console.log("URL:", e.target.value);
-                    setLinkName(e.target.value);
-                }}/>
-            </div>
-            <div>
-                <input
-                    className = "PropertyInput"
-                    placeholder="Zillow URL e.g. https://www.zillow.com/homedetails/48-Winding-Ln-Feasterville-PA-19053/9025882_zpid/"
-                    value={addLink}
-                    onChange={(e) => {
-                        console.log("URL:", e.target.value);
-                        setLink(e.target.value);
-                    }}/>
-            </div>
-            <div>
-                <MdAdd className="newPropIcon" onClick={addZillowLink} title="Add Property" />
-                <MdCancel className="newPropIcon" onClick={removeAddClick} title="Cancel" />
-            </div>
-        </div>)
     
-    };
-    
-    const onAddClick = event => {
-        setAddField(<PropertyLinkInput/>);
+    const onAddClick = () => {
+        setAddField(<PropertyLinkInput
+            addLink={addLink}
+            setLink={setLink}
+            addLinkName={addLinkName}
+            setLinkName={setLinkName}
+            addZillowLink={addZillowLink}
+            removeAddClick={() => setAddField(null)}
+        />);
     };
 
-    const removeAddClick = event => {
-        setAddField(<></>);
+    const removeAddClick = () => {
+        setLink('');
+        setLinkName('');
+        setAddField();
     };
 
     // Base Page Template
@@ -108,7 +85,8 @@ export function Properties() {
         <div className = "container">
         <button className = "addButton" onClick={onAddClick}>+ Add New Property</button>
         {addField}
-        <PropertyDisplay properties={zillowProperties} user = {user} UpdateUserScore = {UpdateUserScore}/>
+        <PropertyDisplay properties={zillowProperties} setProperties={setZillowProperties}
+        user = {user} UpdateUserScore = {UpdateUserScore}/>
         </div>
         </div>
     )
