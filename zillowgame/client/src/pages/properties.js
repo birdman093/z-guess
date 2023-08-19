@@ -1,7 +1,7 @@
 import React, {useEffect, useState, useCallback} from "react";
 import {AddressInUse} from '../config/ServerConfig.mjs';
 import { useUser } from "../components/UserProvider.js";
-import {ValidateProperty, InvalidPostResponse} from "../utility/ValidateProperty.mjs";
+import {ValidateProperty, InvalidPostResponse} from "../utility/ValidateProperty.js";
 import { PropertyDisplay } from "./properties-components/propertyTable.js";
 import { PropertyLinkInput } from "./properties-components/propertyAdd.js";
 import './Properties.css';
@@ -19,7 +19,7 @@ export function Properties() {
         try {
             const response = await fetch(`${AddressInUse}/properties/${user.userName}`);
             const data = await response.json();
-            const updatedData = data.map(item => ({ ...item, unsetGuess: '1000' }));
+            const updatedData = data.map(item => ({ ...item, unsetGuess: '' }));
             setZillowProperties(updatedData);
         } catch (error) {
             console.error('Error loading properties:', error);
@@ -53,7 +53,7 @@ export function Properties() {
         if(response.status === 201){
             alert(`Successfully added ${url}!`);
             const data = await response.json();
-            const newData = { ...data, unsetGuess: '1000' };
+            const newData = { ...data, unsetGuess: '' };
             setZillowProperties(prevProps => [...prevProps, newData]);
         } else {
             InvalidPostResponse(response, url);

@@ -1,7 +1,7 @@
-import {numFormat, priceFormat, guessFormat} from "../../utility/InputFormat.mjs";
+import {numFormat} from "../../utility/InputFormat.js";
 import {MdAdd} from "react-icons/md";
 import {AddressInUse} from '../../config/ServerConfig.mjs';
-import {InvalidPostResponse} from "../../utility/ValidateProperty.mjs";
+import {InvalidPostResponse} from "../../utility/ValidateProperty.js";
 
 export const GuessInputDisplay = (property, setProperties) => {
     if (property.sellprice === null || property.guess === null){
@@ -24,22 +24,25 @@ export const GuessInputAddDisplay = (property, setProperties, user, UpdateUserSc
 };
 
 const AddGuessInput = async(property, setProperties, user, UpdateUserScore) => {
-    let guess = property.unsetGuess; //document.getElementById("guessInput-"+property.propertyid).value;
-    if (guess.length > 3 && guess.length < 10){
-        addGuess(property, setProperties, user, UpdateUserScore);
-    } else if (guess.length < 4) {
-        alert("Invalid - Guess must be greater than $999");
-    } else if (guess.length > 10) {
-        alert("Invalid - Guess must be smaller than $1,000,000,000");
+    let guess = property.unsetGuess;
+    let guessValue = parseInt(guess, 10); // Convert the guess string to an integer
+    console.log(guessValue);
+
+    if (guessValue >= 1000 && guessValue < 1000000000) {
+        SetGuessApi(property, setProperties, user, UpdateUserScore);
+    } else if (guessValue < 1000) {
+        alert("Invalid - Guess must be greater than or equal to $1,000");
+    } else if (guessValue >= 1000000000) {
+        alert("Invalid - Guess must be less than or equal to $1,000,000,000");
     } else {
         alert("Invalid - Misc.")
     }
 }
 
-// add guess
-const addGuess = async(property, setProperties, user, UpdateUserScore) => {
+
+const SetGuessApi = async(property, setProperties, user, UpdateUserScore) => {
     let propertyID = property.propertyid; let sellPrice = property.sellprice;
-    let guess = property.unsetGuess; //document.getElementById("guessInput-"+propertyID).value; // unsetGuess
+    let guess = property.unsetGuess;
     let userName = user.userName; let score = user.score;
     
     const newGuess = {propertyID, sellPrice, score, userName, guess};
@@ -61,7 +64,6 @@ const addGuess = async(property, setProperties, user, UpdateUserScore) => {
             }
             return property;
         }));
-        //document.getElementById("guessDisplay-"+property.propertyid).innerHTML = priceFormat(guess);
     } else {
         InvalidPostResponse(response, propertyID);
     }
