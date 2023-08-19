@@ -1,14 +1,14 @@
 import React, {useState} from "react";
 import {SpotifyAddress} from "../config/ServerConfig.mjs";
 import { useUser } from "../components/UserProvider.js";
-import { ValidateUserPlayListEntry, GetSongs } from "../utility/ValidatePlaylist.mjs";
+import { ValidateUserPlayListEntry, GetSongs } from "../utility/ValidatePlaylist.js";
 import './Playlist.css';
 
 var serverSetup = false;
 
 function Playlist() {
 
-    const {user, UserLoggedIn} = useUser();
+    const {UserLoggedIn} = useUser();
     const [url, setURL] = useState('');
     
     //Makes request to spotify microservice and returns link to a playlist based off the song urls

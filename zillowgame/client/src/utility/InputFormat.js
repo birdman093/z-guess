@@ -1,15 +1,9 @@
-// Reformats input format to be numbers only
 export function numFormat(event, propertyID, setProperties) {
     // Get the input element and its value
     const input = event.target;
     const value = input.value;
-    console.log(value);
-
-    // Remove non-numeric characters
     const numericValue = value.replace(/[^0-9]/g, '');
-
     input.value = numericValue;
-    
 
     setProperties(prevProps => prevProps.map(property => {
         if (property.propertyid === propertyID) {

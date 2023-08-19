@@ -1,4 +1,4 @@
-import {priceFormat, guessFormat} from "../../utility/InputFormat.mjs";
+import {priceFormat, guessFormat} from "../../utility/InputFormat.js";
 import { GuessInputDisplay, GuessInputAddDisplay } from "./propertyGuess.js";
 
 // Property Table Display
