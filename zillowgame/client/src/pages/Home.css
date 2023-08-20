@@ -1,0 +1,32 @@
+.howtoplay {
+  text-align: left;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.5;
+  font-size: 18px;
+} 
+
+.about {
+  text-align: left;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.5;
+  font-size: 18px;
+} 
+
+.home {
+  width: 100%;
+  max-width: 600px;
+  margin: auto;
+  padding: 20px;
+  border-radius: 10px;
+  background-color: var(--header-bg-color);
+}
+
+.home-icon {
+  max-width: 100px;
+  height: auto;
+}
+
+
+

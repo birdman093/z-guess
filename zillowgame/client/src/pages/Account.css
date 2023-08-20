@@ -1,0 +1,55 @@
+.AccountContainer {
+    width: 300px;
+    padding: 20px;
+    background-color: var(--header-bg-color);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .accountAdd {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    outline: none;
+    transition: border-color 0.3s; 
+  }
+  
+  label {
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 5px;
+  }
+  
+  button {
+    padding: 10px 15px;
+    background-color: var(--box-color);
+    color: var(--header-bg-color);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  button:hover {
+    background-color: #2196F3
+  }
+  
+  button:active {
+    background-color: #2196F3;
+  }
+
+  input.accountAdd{
+    font-size: 12px;
+    width: 150px;
+    margin: 5px 20px 5px 20px;
+  }
+  
+  

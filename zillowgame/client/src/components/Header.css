@@ -1,0 +1,39 @@
+/* navigation bar */
+.navBar {
+  display: flex;
+  justify-content: space-between;
+  list-style-type: none;
+  padding: 0 10vw; /* 0 for top and bottom, 20px for left and right */
+  background-color: var(--header-bg-color);
+  margin-bottom: 0px;
+  margin-left: 1%;
+  margin-right: 1%;
+  border-radius: 8px;
+  font-size: 20px;
+  align-items: center;
+}
+
+.navBar li {
+  padding-left: 2vw;
+  padding-right: 2vw;
+}
+
+.navBar li img {
+  padding-top: 0.5vw;
+  padding-bottom: 0.5vw;
+}
+
+.navBar a {
+  text-decoration: none;
+  color: var(--text-color);
+}
+
+.main-body {
+  margin-bottom: 100px;
+}
+
+
+.navBar-icon {
+  max-width: 40px;
+  height: auto;
+}
