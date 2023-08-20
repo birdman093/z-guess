@@ -5,11 +5,11 @@ import {InvalidPostResponse} from "../../utility/ValidateProperty.js";
 
 export const GuessInputDisplay = (property, setProperties) => {
     if (property.sellprice === null || property.guess === null){
-        return <input
+        return (<input
         className = "guessInput" 
         value = {property.unsetGuess}
-        onChange = {(event) => numFormat(event, property.propertyid, setProperties)}
-        placeholder="$2,093,068!"/>
+        onChange = {(e) => numFormat(e, property.propertyid, setProperties)}
+        placeholder="$2,093,068!"/>)
     } else {
         return
     }

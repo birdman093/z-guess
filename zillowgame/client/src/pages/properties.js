@@ -8,9 +8,9 @@ import './Properties.css';
 
 export function Properties() {
     const [zillowProperties, setZillowProperties] = useState([]);
-    const [addField, setAddField] = useState([]);
-    const [addLink, setLink] = useState();
-    const [addLinkName, setLinkName] = useState();
+    const [inputFields, setInputFields] = useState(false);
+    const [inputURL, setURL] = useState('');
+    const [inputURLName, setURLName] = useState('');
     const {user, UserLoggedIn, UpdateUserScore} = useUser();
 
     const loadProperties = useCallback(async () => {
@@ -34,14 +34,12 @@ export function Properties() {
     const addZillowLink = async() => {
         if (!UserLoggedIn()) {return;}
 
-        let url = addLink;
-        let name = addLinkName;
+        let userName = user.userName;
+        let url = inputURL;
+        let name = inputURLName;
 
         if (!ValidateProperty(url,name)) {return;}
-
-        let userName = user.userName;
-
-        removeAddClick();
+        
         const response = await fetch(`${AddressInUse}/properties`, {
             method: 'POST',
             body: JSON.stringify({name,url,userName}),
@@ -49,6 +47,8 @@ export function Properties() {
                 'Content-Type': 'application/json'
             }
         });
+        removeAddClick();
+
         console.log(response);
         if(response.status === 201){
             alert(`Successfully added ${url}!`);
@@ -58,23 +58,16 @@ export function Properties() {
         } else {
             InvalidPostResponse(response, url);
         }
-    }
+    };
     
     const onAddClick = () => {
-        setAddField(<PropertyLinkInput
-            addLink={addLink}
-            setLink={setLink}
-            addLinkName={addLinkName}
-            setLinkName={setLinkName}
-            addZillowLink={addZillowLink}
-            removeAddClick={() => setAddField(null)}
-        />);
+        setURL('');
+        setURLName('');
+        setInputFields(true);
     };
 
     const removeAddClick = () => {
-        setLink('');
-        setLinkName('');
-        setAddField();
+        setInputFields(false);
     };
 
     // Base Page Template
@@ -83,10 +76,18 @@ export function Properties() {
         <h1>Property History</h1>
         <h3 id = "userScore">{user.firstName + " " + user.lastName + " - Score: " + user.score}</h3>
         <div className = "container">
-        <button className = "addButton" onClick={onAddClick}>+ Add New Property</button>
-        {addField}
-        <PropertyDisplay properties={zillowProperties} setProperties={setZillowProperties}
-        user = {user} UpdateUserScore = {UpdateUserScore}/>
+            <button className = "addButton" onClick={onAddClick}>+ Add New Property</button>
+            <PropertyLinkInput
+                inputFields={inputFields}
+                addLink={inputURL}
+                setLink={setURL}
+                addLinkName={inputURLName}
+                setLinkName={setURLName}
+                addZillowLink={addZillowLink}
+                removeAddClick={removeAddClick}
+            />
+            <PropertyDisplay properties={zillowProperties} setProperties={setZillowProperties}
+            user = {user} UpdateUserScore = {UpdateUserScore}/>
         </div>
         </div>
     )
