@@ -70,7 +70,6 @@ export function Properties() {
         setInputFields(false);
     };
 
-    // Base Page Template
     return(
         <div>
         <h1>Property History</h1>
