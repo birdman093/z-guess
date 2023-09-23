@@ -13,7 +13,7 @@ function Header() {
       <div className="main-body">
         <nav>
             <ul className="navBar">
-              <li><img src="/z-guess-dark.png" alt="Z-Guess" className="navBar-icon" /></li>
+              <li><img src="./z-guess-dark.png" alt="Z-Guess" className="navBar-icon" /></li>
               <li><Link to="/">Home</Link></li>
               <li><Link to="/account">Account</Link></li>
               <li><Link to="/playlist">Playlist</Link></li>
