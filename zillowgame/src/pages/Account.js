@@ -1,6 +1,6 @@
 import React, {useState, useEffect } from 'react';
 import { useUser } from '../components/UserProvider.js';
-import {AddressInUse} from "../config/ServerConfig.mjs";
+import {AddressInUse} from "../config/ServerConfig.js";
 import './Account.css';
 
 function Account() {

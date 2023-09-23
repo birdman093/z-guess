@@ -1,4 +1,4 @@
-import {PORT} from '../client/src/config/ServerConfig.mjs';
+import {PORT} from '../src/config/ServerConfig.js';
 import propertiesRoutes from './routes/properties.js'
 import userRoutes from './routes/user.js'
 import express from 'express';

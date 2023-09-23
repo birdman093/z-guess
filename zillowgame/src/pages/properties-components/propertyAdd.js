@@ -1,4 +1,4 @@
-import {MdAdd, MdCancel} from "react-icons/md";
+import {MdAdd, MdCancel} from "react-icons/md/index.esm.js";
 
 // Add Properties Section
 export const PropertyLinkInput = ({ inputFields, addLink, setLink, addLinkName, setLinkName, addZillowLink, removeAddClick }) => {

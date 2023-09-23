@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useCallback} from "react";
-import {AddressInUse} from '../config/ServerConfig.mjs';
+import {AddressInUse} from '../config/ServerConfig.js';
 import { useUser } from "../components/UserProvider.js";
 import {ValidateProperty, InvalidPostResponse} from "../utility/ValidateProperty.js";
 import { PropertyDisplay } from "./properties-components/propertyTable.js";

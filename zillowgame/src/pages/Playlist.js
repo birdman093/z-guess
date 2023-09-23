@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {SpotifyAddress} from "../config/ServerConfig.mjs";
+import {SpotifyAddress} from "../config/ServerConfig.js";
 import { useUser } from "../components/UserProvider.js";
 import { ValidateUserPlayListEntry, GetSongs } from "../utility/ValidatePlaylist.js";
 import './Playlist.css';

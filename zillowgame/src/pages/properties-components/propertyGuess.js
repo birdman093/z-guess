@@ -1,6 +1,6 @@
 import {numFormat} from "../../utility/InputFormat.js";
-import {MdAdd} from "react-icons/md";
-import {AddressInUse} from '../../config/ServerConfig.mjs';
+import {MdAdd} from "react-icons/md/index.esm.js";
+import {AddressInUse} from '../../config/ServerConfig.js';
 import {InvalidPostResponse} from "../../utility/ValidateProperty.js";
 
 export const GuessInputDisplay = (property, setProperties) => {

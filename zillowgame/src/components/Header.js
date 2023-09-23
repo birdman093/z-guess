@@ -2,10 +2,9 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import "./Header.css";
 import Playlist from '../pages/Playlist.js';
-import Home from '../pages/Home';
+import Home from '../pages/Home.js';
 import Account from '../pages/Account.js';
-import Properties from '../pages/Properties';
-
+import Properties from '../pages/Properties.js';
 
 function Header() {
   return (
