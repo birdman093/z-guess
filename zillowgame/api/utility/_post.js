@@ -58,10 +58,17 @@ export function SQLError(error, res){
     res.status(400);
     if (error.code === "ER_DUP_ENTRY") {
         res.write(errorMessage("Duplicate"));
-    } else {
+    } 
+    else {
         res.write(errorMessage("DB-Post"));
     }
     
+    res.end();
+}
+
+export function CounterError(res){
+    res.status(429);
+    res.write(errorMessage("API Limit Hit - No More Requests Allowed this Month"));
     res.end();
 }
 

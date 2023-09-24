@@ -48,17 +48,24 @@ function Account() {
     // Base Page Template
     return(
         <div>
-        <h1>Account Login</h1>
-        <div className = "AccountContainer">
-            <label>UserName: </label>
-            <input className = "accountAdd" value={userName} onChange={e => setUserName(e.target.value)}></input>
-            <br></br>
-            <label>Password: </label>
-            <input className = "accountAdd" type = "password" value={password} onChange={e => setPassword(e.target.value)}></input>
-            <br></br>
-            <button onClick = {VerifyPassword}>Verify</button>
-        </div>
-        {greeting}
+            <h1>Account Login</h1>
+            <div className = "AccountContainer">
+                <label>UserName: </label>
+                <input className = "accountAdd" value={userName} onChange={e => setUserName(e.target.value)}></input>
+                <br></br>
+                <label>Password: </label>
+                <input className = "accountAdd" type = "password" value={password} onChange={e => setPassword(e.target.value)}></input>
+                <br></br>
+                <button onClick = {VerifyPassword}>Verify</button>
+            </div>
+            {greeting}
+            <div className="centered-box">
+                <span>Project limited to 45 api calls/ month</span> 
+                <span>Use Test Login Account</span>
+                <br></br>
+                <span>Username: featheru</span>
+                <span>Password: log</span>
+            </div>
         </div>
     )
 }

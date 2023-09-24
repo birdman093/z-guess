@@ -1,5 +1,6 @@
 import {config} from '../config/_config.js';
 import {insert} from '../utility/_post.js';
+import counterCheck from '../utility/_counter.js';
 import {GetZillowPrice} from '../utility/_zillowPrice.js';
 import connection from '../middlewares/_dbSetup.js';
 import errorMessage from '../utility/_error.js';
@@ -25,6 +26,8 @@ export default async function(req, res)
         res.status(403).send(errorMessage("NoAccount"));
         return;
     }
+
+    await counterCheck(res, connection);
 
     // RAPID API Zillow.com
     const options = config.rapidAPI
