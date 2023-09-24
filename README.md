@@ -10,7 +10,13 @@ Z-Guess enables users to track sell-price estimates for house listings on Zillow
 FrontEnd: React.js, HTML/CSS
 BackEnd: Node.js
 DataBase: PostgresSQL (switched from MySQL in 2023)
-Cloud: Railway (Postgres), Vercel (Static, Node Server)
+Cloud: Railway (Postgres), Vercel (React/ Node)
+```
+
+## Deployment
+```
+Locally - vercel dev
+Deployment - vercel --prod
 ```
 
 ## Methodology (Demo vs. Production)
