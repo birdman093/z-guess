@@ -1,4 +1,4 @@
-import errorMessage from "./error.js";
+import errorMessage from "./_error.js";
 
 export const propertyColumns = [
     "AccountsToProperties.PropertyID",
@@ -64,11 +64,14 @@ export function sendPropertyData(connection, res, userName, propertyID) {
         Accounts.UserName = $1 AND Properties.PropertyID = $2`;
 
     connection.query(qString, [userName, propertyID],function(error, results, fields){
+        console.log(error);
+        console.log(results);
         if(error){
             res.write(errorMessage("DB-Select"));
             res.status(400).end();
         }
         else if (results.rows.length === 1){
+            console.log("sending" + results.rows[0])
             return res.status(201).json(results.rows[0]);
         } else {
             return res.status(201).json({});

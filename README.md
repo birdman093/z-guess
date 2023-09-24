@@ -13,10 +13,10 @@ DataBase: PostgresSQL (switched from MySQL in 2023)
 Cloud: Railway (Postgres), Vercel (React/ Node)
 ```
 
-## Local Deployment
+## Deployment
 ```
-client --> npm start
-server --> cd server; node server.js
+Locally - vercel dev
+Deployment - vercel --prod
 ```
 
 ## Methodology (Demo vs. Production)

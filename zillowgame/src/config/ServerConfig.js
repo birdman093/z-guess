@@ -1,7 +1,7 @@
-export const AddressDeploy = '';
 export const PORT = 5005;
-export const AddressLocal = `http://localhost:${PORT}`;
+export const AddressDeploy = 'api';
+export const AddressLocal = '';
 export const SpotifyAddress = 'NOTIMPLEMENTED'
-export const AddressInUse = AddressLocal;
+export const AddressInUse = AddressDeploy;
 
 

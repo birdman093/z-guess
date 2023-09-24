@@ -27,12 +27,13 @@
     "react-service-worker": "^0.1.1",
     "semantic-ui-react": "^2.1.2",
     "serve": "^13.0.2",
+    "vercel": "^32.3.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start:frontend": "react-scripts start",
-    "start:backend": "node api/server.js",
-    "start": "concurrently \"npm run start:frontend\" \"npm run start:backend\"",
+    "start:backend": "node server.js",
+    "start": "npm run start:backend",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

@@ -1,4 +1,4 @@
-import {config} from '../config/config.js';
+import {config} from '../config/_config.js';
 import pkg from 'pg';
 
 const {Pool} = pkg;

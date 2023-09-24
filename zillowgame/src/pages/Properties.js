@@ -49,10 +49,10 @@ export function Properties() {
         });
         removeAddClick();
 
-        console.log(response);
         if(response.status === 201){
             alert(`Successfully added ${url}!`);
             const data = await response.json();
+            console.log(data);
             const newData = { ...data, unsetGuess: '' };
             setZillowProperties(prevProps => [...prevProps, newData]);
         } else {

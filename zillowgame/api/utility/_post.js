@@ -1,12 +1,17 @@
-import { CalcPropScore } from "./zillowPrice.js";
-import errorMessage from './error.js';
+import { CalcPropScore } from "./_zillowPrice.js";
+import errorMessage from './_error.js';
 
 // Insert Query into SQL DB
 export function insert(req, res, sql, inserts, connection) {
-    connection.query(sql,inserts,function(error, results, fields){
-        if(error){
-            SQLError(error, res)
-        }
+    return new Promise((resolve, reject) => {
+        connection.query(sql,inserts,function(error, results, fields){
+            if(error){
+                SQLError(error, res)
+                reject();
+            } else {
+                resolve();
+            }
+        });
     });
 }
 
